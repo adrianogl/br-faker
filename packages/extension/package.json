@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup && node scripts/build-extension.mjs"
   },
   "dependencies": {
     "@br-faker/core": "*"

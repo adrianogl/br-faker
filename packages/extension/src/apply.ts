@@ -96,26 +96,42 @@ export function fillField(element: Fillable, formatted: string, raw?: string): F
   return landed ? { filled: true, used: landed } : { filled: false };
 }
 
-/** Controls a user could type into: visible, enabled and not already set. */
-export function isFillable(element: Element): element is Fillable {
+/**
+ * Why a control cannot be typed into, or `null` when it can.
+ *
+ * Returns the reason rather than a bare boolean so the console can account for
+ * every control on the page. A field that is silently dropped is the worst
+ * possible outcome when something does not fill: it appears in neither the
+ * filled nor the unrecognised list, and there is nothing to debug from.
+ */
+export function fillabilityProblem(element: Element): string | null {
   const view = element.ownerDocument.defaultView;
-  if (!view) return false;
+  if (!view) return 'detached from any window';
 
   const isControl =
     element instanceof view.HTMLInputElement ||
     element instanceof view.HTMLTextAreaElement ||
     element instanceof view.HTMLSelectElement;
-  if (!isControl) return false;
+  if (!isControl) return 'not a form control';
 
   const control = element as Fillable;
-  if (control.disabled || (control as HTMLInputElement).readOnly) return false;
+  if (control.disabled) return 'disabled';
+  if ((control as HTMLInputElement).readOnly) return 'readonly';
 
   if (control instanceof view.HTMLInputElement) {
-    const skipped = ['hidden', 'submit', 'button', 'reset', 'file', 'image', 'range', 'color'];
-    if (skipped.includes(control.type)) return false;
+    const untypable = ['hidden', 'submit', 'button', 'reset', 'file', 'image', 'range', 'color'];
+    if (untypable.includes(control.type)) return `type="${control.type}"`;
   }
 
-  return isVisible(control);
+  const hiddenBy = hiddenReason(control);
+  if (hiddenBy) return hiddenBy;
+
+  return null;
+}
+
+/** Controls a user could type into: visible, enabled and not already set. */
+export function isFillable(element: Element): element is Fillable {
+  return fillabilityProblem(element) === null;
 }
 
 /**
@@ -128,16 +144,19 @@ export function isFillable(element: Element): element is Fillable {
  * behaves the same under jsdom as it does in Chrome. `display: none` does not
  * inherit into a child's computed style, so the ancestors have to be walked.
  */
-function isVisible(element: Element): boolean {
+function hiddenReason(element: Element): string | null {
   const view = element.ownerDocument.defaultView;
-  if (!view) return false;
+  if (!view) return 'detached from any window';
 
   for (let node: Element | null = element; node; node = node.parentElement) {
-    if (node.hasAttribute('hidden')) return false;
+    const where = node === element ? 'itself' : `<${node.tagName.toLowerCase()}> ancestor`;
+
+    if (node.hasAttribute('hidden')) return `hidden attribute on ${where}`;
 
     const style = view.getComputedStyle(node);
-    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    if (style.display === 'none') return `display:none on ${where}`;
+    if (style.visibility === 'hidden') return `visibility:hidden on ${where}`;
   }
 
-  return true;
+  return null;
 }

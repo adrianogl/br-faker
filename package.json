@@ -21,7 +21,7 @@
     "banner": "node scripts/build-banner.mjs",
     "art": "npm run icon && npm run banner",
     "workflow": "npm run build -w @br-faker/alfred && npm run icon && node packages/alfred/scripts/build-workflow.mjs",
-    "extension": "npm run build -w @br-faker/extension && npm run icon && node packages/extension/scripts/build-extension.mjs",
+    "extension": "npm run icon && npm run build -w @br-faker/extension",
     "verify": "npm run typecheck && npm run test && npm run build"
   },
   "devDependencies": {

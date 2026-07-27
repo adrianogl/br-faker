@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>BR Faker</title>
+    <title data-i18n="extName">BR Faker</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -75,12 +75,13 @@
     </style>
   </head>
   <body>
-    <h1>BR Faker</h1>
+    <h1 data-i18n="extName">BR Faker</h1>
     <div class="site"><span id="host" class="muted">…</span><br /><span id="scope"></span></div>
-    <button id="fill">Fill this form</button>
-    <button id="allow" class="secondary" hidden>Allow this site</button>
+    <button id="fill" data-i18n="popupFill"></button>
+    <button id="allow" class="secondary" hidden data-i18n="popupAllow"></button>
+    <button id="pick" class="secondary" data-i18n="popupPick"></button>
     <div id="status" class="muted"></div>
-    <a href="#" id="options">Manage allowed sites</a>
+    <a href="#" id="options" data-i18n="popupOptions"></a>
     <script src="popup.js" type="module"></script>
   </body>
 </html>

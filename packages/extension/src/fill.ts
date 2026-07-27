@@ -1,7 +1,8 @@
 import type { Person } from '@br-faker/core';
 
-import { type Fillable, fillField, isFillable } from './apply.js';
+import { type Fillable, fillField, fillabilityProblem } from './apply.js';
 import { type FieldKind, detect, readSignals } from './fields.js';
+import { type FieldOverride, overrideFor, suggestSelector } from './overrides.js';
 
 /**
  * Walking a form and filling what it recognises.
@@ -31,11 +32,34 @@ export interface FilledField {
   label: string;
 }
 
+export interface SkippedField {
+  /** A selector the user can paste straight into a manual override. */
+  selector: string;
+  /** The placeholder or name, so the field is recognisable in the log. */
+  hint: string;
+}
+
+export interface IgnoredField {
+  selector: string;
+  /** Why it could not be typed into: disabled, hidden, wrong type. */
+  reason: string;
+}
+
 export interface FillReport {
   person: Person;
   filled: FilledField[];
-  /** Controls that were visible and editable but matched no known field. */
-  skipped: number;
+  /**
+   * Controls that were visible and editable but matched no known field, each
+   * with a ready-made selector. Detection will never cover every component
+   * library, so the honest move is to hand back exactly what is needed to map
+   * the field by hand.
+   */
+  skipped: SkippedField[];
+  /**
+   * Controls that could not be typed into at all. Reported rather than dropped:
+   * a field that appears in no list is impossible to debug from a console.
+   */
+  ignored: IgnoredField[];
 }
 
 function describe(element: Fillable): string {
@@ -63,32 +87,51 @@ function valuesFor(kind: FieldKind, person: Person, element: Fillable): [string,
   return [formatted, raw];
 }
 
-export function fillForm(root: ParentNode, person: Person): FillReport {
+export function fillForm(
+  root: ParentNode,
+  person: Person,
+  overrides: FieldOverride[] = [],
+): FillReport {
   const filled: FilledField[] = [];
-  let skipped = 0;
+  const skipped: SkippedField[] = [];
+  const ignored: IgnoredField[] = [];
+
+  const note = (element: Element) =>
+    skipped.push({
+      selector: suggestSelector(element),
+      hint: element.getAttribute('placeholder') ?? element.getAttribute('name') ?? '',
+    });
 
   for (const candidate of Array.from(root.querySelectorAll('input, textarea, select'))) {
-    if (!isFillable(candidate)) continue;
-
-    const detection = detect(readSignals(candidate as HTMLElement));
-    if (!detection) {
-      skipped++;
+    const problem = fillabilityProblem(candidate);
+    if (problem) {
+      ignored.push({ selector: suggestSelector(candidate), reason: problem });
       continue;
     }
 
-    const [formatted, raw] = valuesFor(detection.kind, person, candidate);
-    const result = fillField(candidate, formatted, raw);
+    // `fillabilityProblem` returning null is exactly the check isFillable makes.
+    const control = candidate as Fillable;
+
+    // A manual mapping wins outright: the person looking at the form knows
+    // more than the heuristics do.
+    const override = overrideFor(control, overrides);
+    if (override?.kind === 'skip') continue;
+
+    const kind = override?.kind ?? detect(readSignals(control as HTMLElement))?.kind;
+    if (!kind) {
+      note(control);
+      continue;
+    }
+
+    const [formatted, raw] = valuesFor(kind, person, control);
+    const result = fillField(control, formatted, raw);
 
     if (result.filled) {
-      filled.push({
-        kind: detection.kind,
-        value: result.used ?? formatted,
-        label: describe(candidate),
-      });
+      filled.push({ kind, value: result.used ?? formatted, label: describe(control) });
     } else {
-      skipped++;
+      note(control);
     }
   }
 
-  return { person, filled, skipped };
+  return { person, filled, skipped, ignored };
 }

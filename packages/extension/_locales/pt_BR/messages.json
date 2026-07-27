@@ -1,0 +1,183 @@
+{
+  "extName": {
+    "message": "BR Faker"
+  },
+  "extDescription": {
+    "message": "Preenche formulários com dados falsos brasileiros válidos: CPF, CNPJ, CEP, telefone, nome e endereço, como uma pessoa coerente."
+  },
+  "commandFill": {
+    "message": "Preencher o formulário da página atual"
+  },
+  "contextMenuFill": {
+    "message": "Preencher este formulário com dados falsos"
+  },
+  "popupNoPage": {
+    "message": "nenhuma página"
+  },
+  "popupScopeAllowed": {
+    "message": "Nos seus sites liberados"
+  },
+  "popupScopeNotAllowed": {
+    "message": "Fora dos seus sites liberados"
+  },
+  "popupFill": {
+    "message": "Preencher este formulário"
+  },
+  "popupAllow": {
+    "message": "Liberar este site"
+  },
+  "popupPick": {
+    "message": "Mapear um campo clicando nele"
+  },
+  "popupOptions": {
+    "message": "Gerenciar sites e mapeamentos"
+  },
+  "popupFilling": {
+    "message": "Preenchendo…"
+  },
+  "popupNotAllowed": {
+    "message": "Este site não está liberado."
+  },
+  "popupCannotRun": {
+    "message": "Não foi possível rodar nesta página."
+  },
+  "popupNoFields": {
+    "message": "Nenhum campo reconhecido."
+  },
+  "popupFilled": {
+    "message": "$COUNT campo(s) preenchido(s).",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupAllowed": {
+    "message": "$HOST liberado.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsAllowedTitle": {
+    "message": "Sites liberados"
+  },
+  "optionsAllowedLead": {
+    "message": "Um nome de host por linha. Um `*.` no início cobre subdomínios, mas não o domínio puro, então ampliar o alcance continua sendo um ato deliberado. A ideia é impedir que um atalho apertado sem querer escreva um CPF falso num cadastro de verdade."
+  },
+  "optionsEnforce": {
+    "message": "Só preencher formulários nos sites listados acima"
+  },
+  "optionsSaveAllowed": {
+    "message": "Salvar sites"
+  },
+  "optionsMappingsTitle": {
+    "message": "Mapeamento de campos"
+  },
+  "optionsMappingsLead": {
+    "message": "Quando o formulário esconde os rótulos dentro de componentes, a detecção não tem o que ler. Mapeie esses campos à mão, um por linha:"
+  },
+  "optionsMappingsHint": {
+    "message": "A URL casa host e prefixo de caminho, a porta é opcional e `*.` funciona no host. Use `skip` como campo para deixar um controle em paz. O mapeamento vence a detecção."
+  },
+  "optionsMappingsConsole": {
+    "message": "Mais rápido: use o botão de mapear clicando no campo, no popup. O console da página também lista um seletor pronto para cada campo não reconhecido."
+  },
+  "optionsSaveMappings": {
+    "message": "Salvar mapeamentos"
+  },
+  "optionsSaved": {
+    "message": "Salvo"
+  },
+  "optionsMappingsActive": {
+    "message": "$COUNT mapeamento(s) ativo(s).",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsMappingsNotSaved": {
+    "message": "Não salvo — $ERRORS",
+    "placeholders": {
+      "errors": {
+        "content": "$1"
+      }
+    }
+  },
+  "pickerHint": {
+    "message": "Clique num campo para mapeá-lo · Esc para sair"
+  },
+  "pickerMapped": {
+    "message": "Mapeado: $FIELD",
+    "placeholders": {
+      "field": {
+        "content": "$1"
+      }
+    }
+  },
+  "field_fullName": {
+    "message": "Nome completo"
+  },
+  "field_firstName": {
+    "message": "Primeiro nome"
+  },
+  "field_lastName": {
+    "message": "Sobrenome"
+  },
+  "field_email": {
+    "message": "E-mail"
+  },
+  "field_username": {
+    "message": "Usuário"
+  },
+  "field_password": {
+    "message": "Senha"
+  },
+  "field_cpf": {
+    "message": "CPF"
+  },
+  "field_cnpj": {
+    "message": "CNPJ"
+  },
+  "field_company": {
+    "message": "Empresa"
+  },
+  "field_mobile": {
+    "message": "Celular"
+  },
+  "field_landline": {
+    "message": "Telefone fixo"
+  },
+  "field_birthdate": {
+    "message": "Data de nascimento"
+  },
+  "field_postalCode": {
+    "message": "CEP"
+  },
+  "field_street": {
+    "message": "Logradouro"
+  },
+  "field_city": {
+    "message": "Cidade"
+  },
+  "field_stateCode": {
+    "message": "UF"
+  },
+  "field_stateName": {
+    "message": "Estado"
+  },
+  "field_skip": {
+    "message": "Não preencher"
+  },
+  "optionsLanguageTitle": {
+    "message": "Idioma"
+  },
+  "optionsLanguageLead": {
+    "message": "A extensão vem em português. O Chrome escolheria pelo idioma do navegador, então a escolha fica aqui."
+  },
+  "optionsLanguageAuto": {
+    "message": "Seguir o navegador"
+  }
+}

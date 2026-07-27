@@ -1,5 +1,8 @@
 import { generatePerson } from '@br-faker/core';
 
+import { t } from './i18n.js';
+
+import { type FieldOverride, overridesFor, upsertOverride } from './overrides.js';
 import { DEFAULT_SETTINGS, type ScopeSettings, isAllowed } from './scope.js';
 
 /**
@@ -25,6 +28,11 @@ export interface FillOutcome {
 async function readSettings(): Promise<ScopeSettings> {
   const stored = await chrome.storage.sync.get(DEFAULT_SETTINGS);
   return stored as ScopeSettings;
+}
+
+async function readOverrides(): Promise<FieldOverride[]> {
+  const stored = await chrome.storage.sync.get({ overrides: [] });
+  return (stored as { overrides: FieldOverride[] }).overrides;
 }
 
 /** Inject the filler into the tab and return what it managed to fill. */
@@ -63,7 +71,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'fill-form',
-    title: 'Fill this form with fake data',
+    title: t('contextMenuFill'),
     contexts: ['editable', 'page'],
   });
 });
@@ -73,11 +81,47 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  // The content script asks for the data. Generating here keeps faker out of
-  // the script injected into the page.
-  if (message?.type === 'person') {
-    sendResponse(generatePerson());
-    return false;
+  // The content script asks for the data and the mappings that apply to its
+  // URL. Generating here keeps faker out of the script injected into the page.
+  // The popup asks for the picker; it is injected the same way the filler is,
+  // on an explicit gesture and under activeTab.
+  if (message?.type === 'start-picker') {
+    void (async () => {
+      const tab = await activeTab();
+      if (!tab?.id) {
+        sendResponse({ ok: false, reason: 'no-tab' });
+        return;
+      }
+
+      try {
+        await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['picker.js'] });
+        sendResponse({ ok: true });
+      } catch {
+        sendResponse({ ok: false, reason: 'injection-failed' });
+      }
+    })();
+
+    return true;
+  }
+
+  if (message?.type === 'save-override') {
+    void (async () => {
+      const existing = await readOverrides();
+      const overrides = upsertOverride(existing, message.override as FieldOverride);
+      await chrome.storage.sync.set({ overrides });
+      sendResponse({ ok: true, count: overrides.length });
+    })();
+
+    return true;
+  }
+
+  if (message?.type === 'payload') {
+    void (async () => {
+      const overrides = overridesFor(message.url ?? '', await readOverrides());
+      sendResponse({ person: generatePerson(), overrides });
+    })();
+
+    return true;
   }
 
   // The popup drives the same path as the shortcut, so it sees the same

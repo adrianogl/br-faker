@@ -1,0 +1,183 @@
+{
+  "extName": {
+    "message": "BR Faker"
+  },
+  "extDescription": {
+    "message": "Fills forms with valid Brazilian fake data: CPF, CNPJ, CEP, phone, name and address, as one coherent person."
+  },
+  "commandFill": {
+    "message": "Fill the form on the current page"
+  },
+  "contextMenuFill": {
+    "message": "Fill this form with fake data"
+  },
+  "popupNoPage": {
+    "message": "no page"
+  },
+  "popupScopeAllowed": {
+    "message": "In your allowed sites"
+  },
+  "popupScopeNotAllowed": {
+    "message": "Not in your allowed sites"
+  },
+  "popupFill": {
+    "message": "Fill this form"
+  },
+  "popupAllow": {
+    "message": "Allow this site"
+  },
+  "popupPick": {
+    "message": "Map a field by clicking it"
+  },
+  "popupOptions": {
+    "message": "Manage sites and mappings"
+  },
+  "popupFilling": {
+    "message": "Filling…"
+  },
+  "popupNotAllowed": {
+    "message": "This site is not allowed."
+  },
+  "popupCannotRun": {
+    "message": "Could not run on this page."
+  },
+  "popupNoFields": {
+    "message": "No recognisable fields found."
+  },
+  "popupFilled": {
+    "message": "Filled $COUNT field(s).",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupAllowed": {
+    "message": "$HOST allowed.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsAllowedTitle": {
+    "message": "Allowed sites"
+  },
+  "optionsAllowedLead": {
+    "message": "One hostname per line. A leading `*.` matches subdomains but not the bare domain, so widening the scope stays deliberate. The point is to stop a stray shortcut from typing a fake CPF into a real signup."
+  },
+  "optionsEnforce": {
+    "message": "Only fill forms on the sites listed above"
+  },
+  "optionsSaveAllowed": {
+    "message": "Save sites"
+  },
+  "optionsMappingsTitle": {
+    "message": "Field mappings"
+  },
+  "optionsMappingsLead": {
+    "message": "When a form hides its labels inside components, detection has nothing to read. Map those fields by hand, one per line:"
+  },
+  "optionsMappingsHint": {
+    "message": "The URL matches host and path prefix, a port is optional, and `*.` works on the host. Use `skip` as the field to leave a control alone. Mappings win over detection."
+  },
+  "optionsMappingsConsole": {
+    "message": "Quicker: use the click-to-map button in the popup. The page console also lists a ready-made selector for every field that was not recognised."
+  },
+  "optionsSaveMappings": {
+    "message": "Save mappings"
+  },
+  "optionsSaved": {
+    "message": "Saved"
+  },
+  "optionsMappingsActive": {
+    "message": "$COUNT mapping(s) active.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsMappingsNotSaved": {
+    "message": "Not saved — $ERRORS",
+    "placeholders": {
+      "errors": {
+        "content": "$1"
+      }
+    }
+  },
+  "pickerHint": {
+    "message": "Click a field to map it · Esc to leave"
+  },
+  "pickerMapped": {
+    "message": "Mapped: $FIELD",
+    "placeholders": {
+      "field": {
+        "content": "$1"
+      }
+    }
+  },
+  "field_fullName": {
+    "message": "Full name"
+  },
+  "field_firstName": {
+    "message": "First name"
+  },
+  "field_lastName": {
+    "message": "Last name"
+  },
+  "field_email": {
+    "message": "Email"
+  },
+  "field_username": {
+    "message": "Username"
+  },
+  "field_password": {
+    "message": "Password"
+  },
+  "field_cpf": {
+    "message": "CPF"
+  },
+  "field_cnpj": {
+    "message": "CNPJ"
+  },
+  "field_company": {
+    "message": "Company"
+  },
+  "field_mobile": {
+    "message": "Mobile"
+  },
+  "field_landline": {
+    "message": "Landline"
+  },
+  "field_birthdate": {
+    "message": "Date of birth"
+  },
+  "field_postalCode": {
+    "message": "Postal code"
+  },
+  "field_street": {
+    "message": "Street"
+  },
+  "field_city": {
+    "message": "City"
+  },
+  "field_stateCode": {
+    "message": "State code"
+  },
+  "field_stateName": {
+    "message": "State"
+  },
+  "field_skip": {
+    "message": "Do not fill"
+  },
+  "optionsLanguageTitle": {
+    "message": "Language"
+  },
+  "optionsLanguageLead": {
+    "message": "The extension ships in Portuguese. Chrome would pick by browser language, so the choice lives here instead."
+  },
+  "optionsLanguageAuto": {
+    "message": "Follow the browser"
+  }
+}

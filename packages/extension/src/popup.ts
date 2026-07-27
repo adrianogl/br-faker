@@ -1,4 +1,5 @@
 import type { FillOutcome } from './background.js';
+import { applyTranslations, initI18n, t } from './i18n.js';
 import { DEFAULT_SETTINGS, type ScopeSettings, hostnameOf, isAllowed } from './scope.js';
 
 /**
@@ -10,6 +11,7 @@ const hostEl = document.getElementById('host') as HTMLElement;
 const scopeEl = document.getElementById('scope') as HTMLElement;
 const fillButton = document.getElementById('fill') as HTMLButtonElement;
 const allowButton = document.getElementById('allow') as HTMLButtonElement;
+const pickButton = document.getElementById('pick') as HTMLButtonElement;
 const statusEl = document.getElementById('status') as HTMLElement;
 const optionsLink = document.getElementById('options') as HTMLAnchorElement;
 
@@ -27,7 +29,7 @@ async function render(): Promise<void> {
   const url = tab?.url ?? '';
   const hostname = hostnameOf(url);
 
-  hostEl.textContent = hostname ?? 'no page';
+  hostEl.textContent = hostname ?? t('popupNoPage');
 
   if (!hostname) {
     scopeEl.textContent = '';
@@ -36,28 +38,25 @@ async function render(): Promise<void> {
   }
 
   const allowed = isAllowed(url, await settings());
-  scopeEl.textContent = allowed ? 'In your allowed sites' : 'Not in your allowed sites';
+  scopeEl.textContent = t(allowed ? 'popupScopeAllowed' : 'popupScopeNotAllowed');
   scopeEl.className = allowed ? '' : 'muted';
   fillButton.disabled = !allowed;
   allowButton.hidden = allowed;
 }
 
 fillButton.addEventListener('click', async () => {
-  statusEl.textContent = 'Filling…';
+  statusEl.textContent = t('popupFilling');
   const outcome: FillOutcome = await chrome.runtime.sendMessage({ type: 'fill' });
 
   if (!outcome?.ok) {
-    statusEl.textContent =
-      outcome?.reason === 'not-allowed'
-        ? 'This site is not allowed.'
-        : 'Could not run on this page.';
+    statusEl.textContent = t(
+      outcome?.reason === 'not-allowed' ? 'popupNotAllowed' : 'popupCannotRun',
+    );
     return;
   }
 
   statusEl.textContent =
-    outcome.filled === 0
-      ? 'No recognisable fields found.'
-      : `Filled ${outcome.filled} field${outcome.filled === 1 ? '' : 's'}.`;
+    outcome.filled === 0 ? t('popupNoFields') : t('popupFilled', String(outcome.filled));
 });
 
 allowButton.addEventListener('click', async () => {
@@ -71,8 +70,21 @@ allowButton.addEventListener('click', async () => {
     allowlist: [...new Set([...current.allowlist, hostname])],
   });
 
-  statusEl.textContent = `${hostname} allowed.`;
+  statusEl.textContent = t('popupAllowed', hostname);
   await render();
+});
+
+pickButton.addEventListener('click', async () => {
+  const outcome = await chrome.runtime.sendMessage({ type: 'start-picker' });
+
+  if (!outcome?.ok) {
+    statusEl.textContent = t('popupCannotRun');
+    return;
+  }
+
+  // The picker lives in the page, and the popup closes the moment focus moves
+  // there — closing it explicitly avoids a stale window hanging around.
+  window.close();
 });
 
 optionsLink.addEventListener('click', (event) => {
@@ -80,4 +92,8 @@ optionsLink.addEventListener('click', (event) => {
   chrome.runtime.openOptionsPage();
 });
 
-void render();
+void (async () => {
+  await initI18n();
+  applyTranslations();
+  await render();
+})();
