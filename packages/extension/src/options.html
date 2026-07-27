@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>BR Faker — allowed sites</title>
+    <title data-i18n="extName">BR Faker</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -21,18 +21,31 @@
         }
       }
       body {
-        max-width: 620px;
+        max-width: 660px;
         margin: 40px auto;
-        padding: 0 20px;
+        padding: 0 20px 60px;
         font: 14px/1.6 system-ui, -apple-system, sans-serif;
         color: var(--fg);
       }
+      /* Each panel saves on its own: a syntax error in the mappings must not
+         stop the allowed sites from being saved, and vice versa. */
+      section {
+        padding: 24px;
+        margin-bottom: 24px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
       p.lead {
+        margin-top: 0;
         color: var(--muted);
       }
       textarea {
         width: 100%;
-        min-height: 220px;
+        min-height: 190px;
         padding: 12px;
         font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
         color: inherit;
@@ -47,6 +60,14 @@
         align-items: center;
         margin: 16px 0;
       }
+      select {
+        padding: 8px 10px;
+        font: inherit;
+        color: inherit;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+      }
       button {
         padding: 9px 18px;
         font: inherit;
@@ -57,30 +78,68 @@
         border-radius: 7px;
         cursor: pointer;
       }
-      #saved {
+      .status {
         margin-left: 12px;
         color: var(--muted);
+      }
+      pre.syntax {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+        overflow-x: auto;
       }
       code {
         background: var(--surface);
         padding: 1px 5px;
         border-radius: 4px;
       }
+      footer {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
     </style>
   </head>
   <body>
-    <h1>Allowed sites</h1>
-    <p class="lead">
-      One hostname per line. A leading <code>*.</code> matches subdomains but not the bare domain,
-      so widening the scope stays deliberate. The point is to stop a stray shortcut from typing a
-      fake CPF into a real signup.
-    </p>
-    <textarea id="allowlist" spellcheck="false"></textarea>
-    <label class="toggle">
-      <input type="checkbox" id="enforce" />
-      Only fill forms on the sites listed above
-    </label>
-    <button id="save">Save</button><span id="saved"></span>
+    <section>
+      <h2 data-i18n="optionsLanguageTitle"></h2>
+      <p class="lead" data-i18n="optionsLanguageLead"></p>
+      <select id="language">
+        <option value="pt_BR">Português (Brasil)</option>
+        <option value="en">English</option>
+        <option value="auto" data-i18n="optionsLanguageAuto"></option>
+      </select>
+    </section>
+
+    <section>
+      <h2 data-i18n="optionsAllowedTitle">Allowed sites</h2>
+      <p class="lead" data-i18n="optionsAllowedLead"></p>
+      <textarea id="allowlist" spellcheck="false"></textarea>
+      <label class="toggle">
+        <input type="checkbox" id="enforce" />
+        <span data-i18n="optionsEnforce"></span>
+      </label>
+      <button id="save-allowlist" data-i18n="optionsSaveAllowed"></button>
+      <span id="allowlist-status" class="status"></span>
+    </section>
+
+    <section>
+      <h2 data-i18n="optionsMappingsTitle">Field mappings</h2>
+      <p class="lead" data-i18n="optionsMappingsLead"></p>
+      <pre class="syntax">url | css-selector | field</pre>
+      <p class="lead" data-i18n="optionsMappingsHint"></p>
+      <p class="lead" data-i18n="optionsMappingsConsole"></p>
+      <textarea
+        id="overrides"
+        spellcheck="false"
+        placeholder="localhost:5173/cadastro | #cnpj | cnpj"></textarea>
+      <button id="save-overrides" data-i18n="optionsSaveMappings"></button>
+      <span id="overrides-status" class="status"></span>
+      <footer id="overrides-count"></footer>
+    </section>
+
     <script src="options.js" type="module"></script>
   </body>
 </html>
