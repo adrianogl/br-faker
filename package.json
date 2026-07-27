@@ -1,6 +1,6 @@
 {
   "name": "br-faker",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Brazilian fake data: a shared generator core, an Alfred workflow and a browser extension that fills forms",
   "license": "MIT",

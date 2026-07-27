@@ -1,6 +1,6 @@
 {
   "name": "@br-faker/alfred",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Alfred workflow front-end for the Brazilian fake data generators",
   "license": "MIT",
