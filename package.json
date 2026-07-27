@@ -1,0 +1,45 @@
+{
+  "name": "alfred-br-faker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Alfred workflow that generates Brazilian fake data — CPF, CNPJ (numeric and alphanumeric), CNH, PIS, CEP, licence plate, voter ID and more",
+  "keywords": [
+    "alfred",
+    "alfred-workflow",
+    "faker",
+    "brazil",
+    "cpf",
+    "cnpj"
+  ],
+  "license": "MIT",
+  "author": "Adriano Gonçalves",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "br-faker": "./dist/bin.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "workflow": "npm run build && node scripts/build-workflow.mjs",
+    "verify": "npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "@brazilian-utils/brazilian-utils": "^2.3.0",
+    "@faker-js/faker": "^10.5.0",
+    "cpf-cnpj-validator": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

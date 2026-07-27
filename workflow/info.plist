@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>dev.aglv.alfred-br-faker</string>
+	<key>category</key>
+	<string>Tools</string>
+	<key>connections</key>
+	<dict>
+		<key>5B1F0C10-9E4A-4C2E-9B77-2E4D3F6A8C01</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7D2A4E60-1C83-4F55-A0B6-9F1E7C5D4A22</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Adriano Gonçalves</string>
+	<key>description</key>
+	<string>Generates Brazilian fake data: CPF, CNPJ (numeric and alphanumeric), CNH, PIS, CEP, licence plate, voter ID, names, addresses and more.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>BR Faker</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>faker</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Generating…</string>
+				<key>script</key>
+				<string># Alfred runs with a minimal PATH, so Node has to be located explicitly.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.volta/bin:$HOME/.local/bin:$PATH"
+
+if ! command -v node &gt;/dev/null 2&gt;&amp;1; then
+  # Fall back to the newest nvm-managed Node, sorting by version rather than
+  # lexicographically so v20 wins over v9.
+  nvm_bin=$(ls -d "$HOME"/.nvm/versions/node/*/bin 2&gt;/dev/null | sort -V | tail -1)
+  [ -n "$nvm_bin" ] &amp;&amp; export PATH="$nvm_bin:$PATH"
+fi
+
+if ! command -v node &gt;/dev/null 2&gt;&amp;1; then
+  printf '{"items":[{"uid":"no-node","title":"Node.js not found","subtitle":"Install Node 20+ or add it to PATH in the workflow script","valid":false}]}'
+  exit 0
+fi
+
+exec node br-faker.cjs "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>cpf, cnpj, cnpj-alpha, cnh, pis, cep, placa, nome, endereco…</string>
+				<key>title</key>
+				<string>BR Faker</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>5B1F0C10-9E4A-4C2E-9B77-2E4D3F6A8C01</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<true/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>7D2A4E60-1C83-4F55-A0B6-9F1E7C5D4A22</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Type `faker` followed by what you need — for example `faker cpf`, `faker cnpj-alpha`, `faker endereco`.
+
+Each result already shows the generated value; press Enter to copy it. Hold Option to copy the unmasked version (digits only) where that makes sense.
+
+Requires Node.js 20 or newer.</string>
+	<key>uidata</key>
+	<dict>
+		<key>5B1F0C10-9E4A-4C2E-9B77-2E4D3F6A8C01</key>
+		<dict>
+			<key>xpos</key>
+			<integer>90</integer>
+			<key>ypos</key>
+			<integer>90</integer>
+		</dict>
+		<key>7D2A4E60-1C83-4F55-A0B6-9F1E7C5D4A22</key>
+		<dict>
+			<key>xpos</key>
+			<integer>350</integer>
+			<key>ypos</key>
+			<integer>90</integer>
+		</dict>
+	</dict>
+	<key>version</key>
+	<string>0.1.0</string>
+	<key>webaddress</key>
+	<string>https://github.com/adrianogl/alfred-br-faker</string>
+</dict>
+</plist>
