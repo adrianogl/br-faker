@@ -4,8 +4,6 @@
 <dict>
 	<key>bundleid</key>
 	<string>dev.aglv.alfred-br-faker</string>
-	<key>category</key>
-	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>5B1F0C10-9E4A-4C2E-9B77-2E4D3F6A8C01</key>
