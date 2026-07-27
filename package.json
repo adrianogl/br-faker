@@ -29,6 +29,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "icon": "node scripts/build-icon.mjs",
+    "banner": "node scripts/build-banner.mjs",
+    "art": "npm run icon && npm run banner",
     "workflow": "npm run build && npm run icon && node scripts/build-workflow.mjs",
     "verify": "npm run typecheck && npm run test && npm run build"
   },

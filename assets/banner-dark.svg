@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="alfred-br-faker — Brazilian fake data, one keystroke away in Alfred">
+  <defs>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1ab554"/>
+      <stop offset="1" stop-color="#007a2e"/>
+    </linearGradient>
+  </defs>
+  <g>
+      <rect x="67.2" y="67.2" width="165.6" height="165.6" rx="39.6" fill="url(#plate)"/>
+      <polygon points="150,78 222,150 150,222 78,150" fill="#ffdf00" stroke="#ffdf00" stroke-width="7.2" stroke-linejoin="round"/>
+      <rect x="114" y="123.9" width="72" height="52.2" rx="5.4" fill="#002776"/>
+      <rect x="123" y="133.8" width="39.6" height="11.52" rx="5.76" fill="#ffffff"/>
+      <rect x="123" y="154.68" width="27" height="11.52" rx="5.76" fill="#ffffff"/>
+  </g>
+  <text x="290" y="128" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" fill="#e6edf3">alfred-br-faker</text>
+  <text x="290" y="168" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="21" fill="#9198a1">Brazilian fake data, one keystroke away in Alfred</text>
+  <g>
+      <g>
+        <rect x="290" y="206" width="58.6" height="32" rx="8" fill="#1c2128" stroke="#30363d"/>
+        <text x="319.3" y="228" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" fill="#c9d1d9" text-anchor="middle">cpf</text>
+      </g>
+      <g>
+        <rect x="358.6" y="206" width="68.8" height="32" rx="8" fill="#1c2128" stroke="#30363d"/>
+        <text x="393" y="228" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" fill="#c9d1d9" text-anchor="middle">cnpj</text>
+      </g>
+      <g>
+        <rect x="437.4" y="206" width="130" height="32" rx="8" fill="#1c2128" stroke="#30363d"/>
+        <text x="502.4" y="228" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" fill="#c9d1d9" text-anchor="middle">cnpj-alpha</text>
+      </g>
+      <g>
+        <rect x="577.4" y="206" width="58.6" height="32" rx="8" fill="#1c2128" stroke="#30363d"/>
+        <text x="606.7" y="228" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" fill="#c9d1d9" text-anchor="middle">cnh</text>
+      </g>
+      <g>
+        <rect x="646" y="206" width="58.6" height="32" rx="8" fill="#1c2128" stroke="#30363d"/>
+        <text x="675.3" y="228" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" fill="#c9d1d9" text-anchor="middle">cep</text>
+      </g>
+  </g>
+</svg>

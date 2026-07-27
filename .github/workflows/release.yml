@@ -1,0 +1,36 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # Typecheck, tests and build. A tag that does not pass never ships.
+      - run: npm run verify
+
+      - run: npm run workflow
+
+      - name: Check the packaged workflow runs
+        run: |
+          unzip -q alfred-br-faker.alfredworkflow -d /tmp/workflow-check
+          node /tmp/workflow-check/br-faker.cjs cpf | grep -q '"uid":"cpf"'
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: alfred-br-faker.alfredworkflow
+          generate_release_notes: true

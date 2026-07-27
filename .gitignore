@@ -1,4 +1,8 @@
 node_modules/
 dist/
+
+# Built by `npm run workflow` and published as a release asset, not committed:
+# it is a zip, so every rebuild is a new blob in history even when nothing changed.
+alfred-br-faker.alfredworkflow
 *.log
 .DS_Store

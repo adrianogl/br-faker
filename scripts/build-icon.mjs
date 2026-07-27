@@ -6,33 +6,18 @@
  * distance fields, antialiased by smoothstep, and the PNG is encoded here on
  * top of the built-in zlib. Keeping it in code means the icon is reproducible
  * and reviewable in a diff rather than an opaque binary someone has to trust.
+ *
+ * The proportions live in artwork.mjs, shared with the README banner.
  */
 import { deflateSync } from 'node:zlib';
 import { writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { COLOURS, GEOMETRY } from './artwork.mjs';
+
 const SIZE = 512;
 const OUTPUT = join(dirname(dirname(fileURLToPath(import.meta.url))), 'workflow', 'icon.png');
-
-// Brazilian flag palette.
-const GREEN_TOP = [0x1a, 0xb5, 0x54];
-const GREEN_BOTTOM = [0x00, 0x7a, 0x2e];
-const YELLOW = [0xff, 0xdf, 0x00];
-const BLUE = [0x00, 0x27, 0x76];
-const WHITE = [0xff, 0xff, 0xff];
-
-/**
- * Widths of the data rows on the card, as a fraction of the icon.
- *
- * Two rows, not three: Alfred draws this at roughly 32px, where anything
- * thinner than ~2px of final artwork blurs into a smudge. Two bold bars still
- * read as fields on a document; three did not survive the downscale.
- */
-const ROWS = [0.22, 0.15];
-const ROW_HALF_HEIGHT = 0.032;
-const ROW_SPACING = 0.116;
-const ROW_LEFT = -0.15;
 
 /** Distance to a rounded rectangle centred on the origin. */
 function sdRoundedRect(x, y, halfWidth, halfHeight, radius) {
@@ -70,6 +55,7 @@ function over(dst, colour, alpha) {
 function render() {
   const pixels = Buffer.alloc(SIZE * SIZE * 4);
   const centre = SIZE / 2;
+  const g = GEOMETRY;
 
   for (let py = 0; py < SIZE; py++) {
     for (let px = 0; px < SIZE; px++) {
@@ -80,30 +66,25 @@ function render() {
 
       // Background plate: a rounded square with a soft vertical gradient, and a
       // little inset so the icon does not touch Alfred's row edges.
-      const plate = sdRoundedRect(x, y, SIZE * 0.46, SIZE * 0.46, SIZE * 0.22);
-      const gradient = mix(GREEN_TOP, GREEN_BOTTOM, (y + centre) / SIZE);
+      const plate = sdRoundedRect(x, y, SIZE * g.plateHalf, SIZE * g.plateHalf, SIZE * g.plateRadius);
+      const gradient = mix(COLOURS.greenTop, COLOURS.greenBottom, (y + centre) / SIZE);
       over(pixel, gradient, coverage(plate));
 
       // The flag's diamond, carrying a document in place of the celestial
       // globe: green and yellow still read as Brazil, while the card and its
       // rows of text say the workflow produces records.
-      over(pixel, YELLOW, coverage(sdDiamond(x, y, SIZE * 0.4, SIZE * 0.02)));
-      over(pixel, BLUE, coverage(sdRoundedRect(x, y, SIZE * 0.2, SIZE * 0.145, SIZE * 0.03)));
+      over(pixel, COLOURS.yellow, coverage(sdDiamond(x, y, SIZE * g.diamondHalf, SIZE * g.diamondRadius)));
+      const card = sdRoundedRect(x, y, SIZE * g.cardHalfWidth, SIZE * g.cardHalfHeight, SIZE * g.cardRadius);
+      over(pixel, COLOURS.blue, coverage(card));
 
       // Rows of data on the card, ragged on the right the way real fields are.
-      for (const [row, width] of ROWS.entries()) {
-        // Subtracting puts ROWS[0] at the top: y grows downwards here.
-        const rowY = y - (row - (ROWS.length - 1) / 2) * SIZE * ROW_SPACING;
+      for (const [row, width] of g.rows.entries()) {
+        // Subtracting puts rows[0] at the top: y grows downwards here.
+        const rowY = y - (row - (g.rows.length - 1) / 2) * SIZE * g.rowSpacing;
         const halfWidth = (width * SIZE) / 2;
-        const rowX = x - (ROW_LEFT * SIZE + halfWidth);
-        const bar = sdRoundedRect(
-          rowX,
-          rowY,
-          halfWidth,
-          SIZE * ROW_HALF_HEIGHT,
-          SIZE * ROW_HALF_HEIGHT,
-        );
-        over(pixel, WHITE, coverage(bar));
+        const rowX = x - (g.rowLeft * SIZE + halfWidth);
+        const bar = sdRoundedRect(rowX, rowY, halfWidth, SIZE * g.rowHalfHeight, SIZE * g.rowHalfHeight);
+        over(pixel, COLOURS.white, coverage(bar));
       }
 
       const offset = (py * SIZE + px) * 4;
