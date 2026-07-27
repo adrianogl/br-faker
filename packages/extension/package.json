@@ -1,6 +1,6 @@
 {
   "name": "@br-faker/extension",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "description": "Chromium (MV3) extension that fills forms with Brazilian fake data",
   "license": "MIT",

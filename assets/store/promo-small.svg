@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 440" width="440" height="440">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1ab554"/>
+      <stop offset="1" stop-color="#007a2e"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.10"/>
+    </linearGradient>
+  </defs>
+  <rect width="440" height="440" fill="#007a2e"/>
+  <g transform="translate(0 80)">
+    <rect width="440" height="280" fill="url(#bg)"/>
+  <g><rect x="162.04" y="46.04" width="115.92" height="115.92" rx="27.72" fill="url(#plate)"/>
+      <polygon points="220,53.6 270.4,104 220,154.4 169.6,104" fill="#ffdf00" stroke="#ffdf00" stroke-width="5.04" stroke-linejoin="round"/>
+      <rect x="194.8" y="85.73" width="50.4" height="36.54" rx="3.78" fill="#002776"/>
+      <rect x="201.1" y="99.97" width="27.72" height="8.06" rx="4.03" fill="#ffffff"/>
+      <rect x="201.1" y="108.03" width="22.68" height="6.55" rx="3.28" fill="#ffffff"/>
+      <polygon points="232.6,111.31 224.79,103.5 224.79,119.12" fill="#ffffff"/></g>
+  <text x="220" y="212" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">br-faker</text>
+  <text x="220" y="245" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="18" fill="#c6efd8" text-anchor="middle">CPF, CNPJ e endereço em um atalho</text>
+  </g>
+</svg>
