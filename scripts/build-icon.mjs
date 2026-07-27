@@ -14,7 +14,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { COLOURS, GEOMETRY } from './artwork.mjs';
+import { COLOURS, geometryFor } from './artwork.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
@@ -36,6 +36,15 @@ function sdRoundedRect(x, y, halfWidth, halfHeight, radius) {
   const dy = Math.abs(y) - halfHeight + radius;
   const outside = Math.hypot(Math.max(dx, 0), Math.max(dy, 0));
   return outside + Math.min(Math.max(dx, dy), 0) - radius;
+}
+
+/** Triangle pointing right: a back edge and two sloped ones, intersected. */
+function sdArrowHead(x, y, apex, centreY, halfHeight) {
+  return Math.max(
+    apex - halfHeight - x,
+    (y - centreY - (apex - x)) / Math.SQRT2,
+    (centreY - y - (apex - x)) / Math.SQRT2,
+  );
 }
 
 /** Distance to a rhombus (the flag's diamond), with rounded corners. */
@@ -66,7 +75,7 @@ function over(dst, colour, alpha) {
 function render(SIZE) {
   const pixels = Buffer.alloc(SIZE * SIZE * 4);
   const centre = SIZE / 2;
-  const g = GEOMETRY;
+  const g = geometryFor(SIZE);
 
   for (let py = 0; py < SIZE; py++) {
     for (let px = 0; px < SIZE; px++) {
@@ -96,6 +105,17 @@ function render(SIZE) {
         const rowX = x - (g.rowLeft * SIZE + halfWidth);
         const bar = sdRoundedRect(rowX, rowY, halfWidth, SIZE * g.rowHalfHeight, SIZE * g.rowHalfHeight);
         over(pixel, COLOURS.white, coverage(bar));
+      }
+
+      if (g.arrow) {
+        const a = g.arrow;
+        const arrowY = SIZE * g.rowSpacing * 0.5;
+        const shaft = sdRoundedRect(
+          x - SIZE * a.shaftCentre, y - arrowY,
+          SIZE * a.shaftHalfWidth, SIZE * a.shaftHalfHeight, SIZE * a.shaftHalfHeight,
+        );
+        const head = sdArrowHead(x, y, SIZE * a.headApex, arrowY, SIZE * a.headHalfHeight);
+        over(pixel, COLOURS.white, coverage(Math.min(shaft, head)));
       }
 
       const offset = (py * SIZE + px) * 4;

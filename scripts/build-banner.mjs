@@ -10,7 +10,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { COLOURS, GEOMETRY, toHex } from './artwork.mjs';
+import { COLOURS, emblemSvg, toHex } from './artwork.mjs';
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const ASSETS = join(ROOT, 'assets');
@@ -49,29 +49,6 @@ const THEMES = {
   },
 };
 
-/** The flag diamond carrying a document, drawn from the shared geometry. */
-function emblem() {
-  const g = GEOMETRY;
-  const s = EMBLEM;
-  const plate = s * g.plateHalf;
-  const diamond = s * g.diamondHalf;
-  const cardWidth = s * g.cardHalfWidth;
-  const cardHeight = s * g.cardHalfHeight;
-
-  const rows = g.rows
-    .map((width, row) => {
-      const height = 2 * s * g.rowHalfHeight;
-      const centreY = EMBLEM_CY + (row - (g.rows.length - 1) / 2) * s * g.rowSpacing;
-      const x = EMBLEM_CX + s * g.rowLeft;
-      return `<rect x="${round(x)}" y="${round(centreY - height / 2)}" width="${round(width * s)}" height="${round(height)}" rx="${round(height / 2)}" fill="${toHex(COLOURS.white)}"/>`;
-    })
-    .join('\n      ');
-
-  return `<rect x="${round(EMBLEM_CX - plate)}" y="${round(EMBLEM_CY - plate)}" width="${round(plate * 2)}" height="${round(plate * 2)}" rx="${round(s * g.plateRadius)}" fill="url(#plate)"/>
-      <polygon points="${round(EMBLEM_CX)},${round(EMBLEM_CY - diamond)} ${round(EMBLEM_CX + diamond)},${round(EMBLEM_CY)} ${round(EMBLEM_CX)},${round(EMBLEM_CY + diamond)} ${round(EMBLEM_CX - diamond)},${round(EMBLEM_CY)}" fill="${toHex(COLOURS.yellow)}" stroke="${toHex(COLOURS.yellow)}" stroke-width="${round(s * g.diamondRadius * 2)}" stroke-linejoin="round"/>
-      <rect x="${round(EMBLEM_CX - cardWidth)}" y="${round(EMBLEM_CY - cardHeight)}" width="${round(cardWidth * 2)}" height="${round(cardHeight * 2)}" rx="${round(s * g.cardRadius)}" fill="${toHex(COLOURS.blue)}"/>
-      ${rows}`;
-}
 
 /**
  * Generator chips. Widths are derived from the label length because SVG has no
@@ -108,7 +85,7 @@ function banner(theme) {
     </linearGradient>
   </defs>
   <g>
-      ${emblem()}
+      ${emblemSvg(EMBLEM, EMBLEM_CX, EMBLEM_CY)}
   </g>
   <text x="${TEXT_X}" y="128" font-family="${SANS}" font-size="52" font-weight="700" fill="${theme.title}">${TITLE}</text>
   <text x="${TEXT_X}" y="168" font-family="${SANS}" font-size="21" fill="${theme.tagline}">${TAGLINE}</text>

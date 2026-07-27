@@ -9,8 +9,9 @@
       <rect x="67.2" y="67.2" width="165.6" height="165.6" rx="39.6" fill="url(#plate)"/>
       <polygon points="150,78 222,150 150,222 78,150" fill="#ffdf00" stroke="#ffdf00" stroke-width="7.2" stroke-linejoin="round"/>
       <rect x="114" y="123.9" width="72" height="52.2" rx="5.4" fill="#002776"/>
-      <rect x="123" y="133.8" width="39.6" height="11.52" rx="5.76" fill="#ffffff"/>
-      <rect x="123" y="154.68" width="27" height="11.52" rx="5.76" fill="#ffffff"/>
+      <rect x="123" y="144.24" width="39.6" height="11.52" rx="5.76" fill="#ffffff"/>
+      <rect x="123" y="155.76" width="32.4" height="9.36" rx="4.68" fill="#ffffff"/>
+      <polygon points="168,160.44 156.84,149.28 156.84,171.6" fill="#ffffff"/>
   </g>
   <text x="290" y="128" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" fill="#e6edf3">br-faker</text>
   <text x="290" y="168" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="21" fill="#9198a1">Brazilian fake data, in Alfred and in your browser</text>
