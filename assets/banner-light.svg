@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="alfred-br-faker — Brazilian fake data, one keystroke away in Alfred">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="br-faker — Brazilian fake data, in Alfred and in your browser">
   <defs>
     <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#1ab554"/>
@@ -12,8 +12,8 @@
       <rect x="123" y="133.8" width="39.6" height="11.52" rx="5.76" fill="#ffffff"/>
       <rect x="123" y="154.68" width="27" height="11.52" rx="5.76" fill="#ffffff"/>
   </g>
-  <text x="290" y="128" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" fill="#0f172a">alfred-br-faker</text>
-  <text x="290" y="168" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="21" fill="#475569">Brazilian fake data, one keystroke away in Alfred</text>
+  <text x="290" y="128" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="52" font-weight="700" fill="#0f172a">br-faker</text>
+  <text x="290" y="168" font-family="system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif" font-size="21" fill="#475569">Brazilian fake data, in Alfred and in your browser</text>
   <g>
       <g>
         <rect x="290" y="206" width="58.6" height="32" rx="8" fill="#f1f5f9" stroke="#dbe2ea"/>

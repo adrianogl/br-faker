@@ -25,8 +25,8 @@ const EMBLEM_CY = HEIGHT / 2;
 
 const TEXT_X = 290;
 
-const TITLE = 'alfred-br-faker';
-const TAGLINE = 'Brazilian fake data, one keystroke away in Alfred';
+const TITLE = 'br-faker';
+const TAGLINE = 'Brazilian fake data, in Alfred and in your browser';
 const CHIPS = ['cpf', 'cnpj', 'cnpj-alpha', 'cnh', 'cep'];
 
 const SANS = 'system-ui, -apple-system, &#34;Segoe UI&#34;, Roboto, Helvetica, Arial, sans-serif';

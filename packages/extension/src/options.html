@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BR Faker — allowed sites</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --fg: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --surface: #f8fafc;
+        --accent: #007a2e;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --fg: #e6edf3;
+          --muted: #9198a1;
+          --line: #30363d;
+          --surface: #161b22;
+        }
+      }
+      body {
+        max-width: 620px;
+        margin: 40px auto;
+        padding: 0 20px;
+        font: 14px/1.6 system-ui, -apple-system, sans-serif;
+        color: var(--fg);
+      }
+      p.lead {
+        color: var(--muted);
+      }
+      textarea {
+        width: 100%;
+        min-height: 220px;
+        padding: 12px;
+        font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: inherit;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+      label.toggle {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin: 16px 0;
+      }
+      button {
+        padding: 9px 18px;
+        font: inherit;
+        font-weight: 600;
+        color: #fff;
+        background: var(--accent);
+        border: 0;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+      #saved {
+        margin-left: 12px;
+        color: var(--muted);
+      }
+      code {
+        background: var(--surface);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Allowed sites</h1>
+    <p class="lead">
+      One hostname per line. A leading <code>*.</code> matches subdomains but not the bare domain,
+      so widening the scope stays deliberate. The point is to stop a stray shortcut from typing a
+      fake CPF into a real signup.
+    </p>
+    <textarea id="allowlist" spellcheck="false"></textarea>
+    <label class="toggle">
+      <input type="checkbox" id="enforce" />
+      Only fill forms on the sites listed above
+    </label>
+    <button id="save">Save</button><span id="saved"></span>
+    <script src="options.js" type="module"></script>
+  </body>
+</html>

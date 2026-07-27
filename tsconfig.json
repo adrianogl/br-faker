@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     // Bundler rather than NodeNext: the .d.ts files shipped by
     // @brazilian-utils/brazilian-utils re-export through extensionless relative
     // paths, which NodeNext rejects for an ESM package. tsup does the bundling,
@@ -16,8 +16,14 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "types": ["node"]
+    "noEmit": true,
+    "types": ["node", "chrome"],
+    "baseUrl": ".",
+    // The workspace link resolves @br-faker/core to TypeScript source. Mapping
+    // it explicitly keeps tsc, vitest and tsup agreeing on one path.
+    "paths": {
+      "@br-faker/core": ["packages/core/src/index.ts"]
+    }
   },
-  "include": ["src", "test", "scripts"]
+  "include": ["packages/*/src", "packages/*/test", "packages/*/*.ts", "scripts"]
 }

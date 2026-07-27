@@ -10,14 +10,25 @@
  * The proportions live in artwork.mjs, shared with the README banner.
  */
 import { deflateSync } from 'node:zlib';
-import { writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { COLOURS, GEOMETRY } from './artwork.mjs';
 
-const SIZE = 512;
-const OUTPUT = join(dirname(dirname(fileURLToPath(import.meta.url))), 'workflow', 'icon.png');
+const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
+
+/**
+ * Alfred takes one large icon; the extension needs the sizes Chrome asks for
+ * in its manifest. All of them come from the same renderer.
+ */
+const TARGETS = [
+  { size: 512, path: join(ROOT, 'packages', 'alfred', 'workflow', 'icon.png') },
+  ...[16, 32, 48, 128].map((size) => ({
+    size,
+    path: join(ROOT, 'packages', 'extension', 'icons', `icon-${size}.png`),
+  })),
+];
 
 /** Distance to a rounded rectangle centred on the origin. */
 function sdRoundedRect(x, y, halfWidth, halfHeight, radius) {
@@ -52,7 +63,7 @@ function over(dst, colour, alpha) {
   return dst;
 }
 
-function render() {
+function render(SIZE) {
   const pixels = Buffer.alloc(SIZE * SIZE * 4);
   const centre = SIZE / 2;
   const g = GEOMETRY;
@@ -123,7 +134,7 @@ function chunk(type, data) {
   return Buffer.concat([length, typed, crc]);
 }
 
-function encodePng(pixels) {
+function encodePng(pixels, SIZE) {
   const header = Buffer.alloc(13);
   header.writeUInt32BE(SIZE, 0);
   header.writeUInt32BE(SIZE, 4);
@@ -149,6 +160,9 @@ function encodePng(pixels) {
   ]);
 }
 
-const png = encodePng(render());
-await writeFile(OUTPUT, png);
-console.log(`built ${OUTPUT} (${SIZE}x${SIZE}, ${(png.length / 1024).toFixed(1)} KB)`);
+for (const { size, path } of TARGETS) {
+  await mkdir(dirname(path), { recursive: true });
+  const png = encodePng(render(size), size);
+  await writeFile(path, png);
+  console.log(`built ${path} (${size}x${size}, ${(png.length / 1024).toFixed(1)} KB)`);
+}

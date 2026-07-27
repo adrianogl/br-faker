@@ -24,13 +24,38 @@ jobs:
       - run: npm run verify
 
       - run: npm run workflow
+      - run: npm run extension
 
-      - name: Check the packaged workflow runs
+      - name: Check the packaged Alfred workflow runs
         run: |
-          unzip -q alfred-br-faker.alfredworkflow -d /tmp/workflow-check
+          unzip -q br-faker.alfredworkflow -d /tmp/workflow-check
           node /tmp/workflow-check/br-faker.cjs cpf | grep -q '"uid":"cpf"'
+
+      - name: Check the extension package is complete
+        run: |
+          unzip -q br-faker-extension.zip -d /tmp/extension-check
+          node --input-type=module -e '
+            import { readFile } from "node:fs/promises";
+            import { existsSync } from "node:fs";
+            const dir = "/tmp/extension-check";
+            const manifest = JSON.parse(await readFile(`${dir}/manifest.json`, "utf8"));
+            if (manifest.manifest_version !== 3) throw new Error("expected manifest v3");
+            if (manifest.host_permissions) throw new Error("no standing host permissions expected");
+            const referenced = [
+              manifest.background.service_worker,
+              manifest.action.default_popup,
+              manifest.options_page,
+              ...Object.values(manifest.icons),
+            ];
+            for (const file of [...referenced, "content.js"]) {
+              if (!existsSync(`${dir}/${file}`)) throw new Error(`missing ${file}`);
+            }
+            console.log(`extension ${manifest.version} ok`);
+          '
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: alfred-br-faker.alfredworkflow
+          files: |
+            br-faker.alfredworkflow
+            br-faker-extension.zip
           generate_release_notes: true

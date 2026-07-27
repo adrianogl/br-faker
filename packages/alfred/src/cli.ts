@@ -4,9 +4,9 @@ import {
   type GroupId,
   findGenerator,
   generate,
-} from './generators.js';
+} from '@br-faker/core';
 
-const USAGE = `alfred-br-faker — Brazilian fake data generator
+const USAGE = `br-faker — Brazilian fake data generator
 
 Usage:
   br-faker <generator> [options]

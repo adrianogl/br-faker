@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { buildOutput } from '../src/alfred.js';
-import { GENERATORS } from '../src/generators.js';
+import { GENERATORS } from '@br-faker/core';
 
 describe('buildOutput', () => {
   it('returns every generator when the query is empty', () => {

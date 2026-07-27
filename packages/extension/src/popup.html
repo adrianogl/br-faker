@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BR Faker</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --fg: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --surface: #f8fafc;
+        --accent: #007a2e;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --fg: #e6edf3;
+          --muted: #9198a1;
+          --line: #30363d;
+          --surface: #161b22;
+        }
+      }
+      body {
+        width: 300px;
+        margin: 0;
+        padding: 14px;
+        font: 13px/1.45 system-ui, -apple-system, sans-serif;
+        color: var(--fg);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 14px;
+      }
+      button {
+        width: 100%;
+        padding: 9px 12px;
+        font: inherit;
+        font-weight: 600;
+        color: #fff;
+        background: var(--accent);
+        border: 0;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+      button.secondary {
+        color: var(--fg);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        font-weight: 500;
+        margin-top: 6px;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .site {
+        padding: 8px 10px;
+        margin-bottom: 10px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        word-break: break-all;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      #status {
+        margin-top: 10px;
+        min-height: 1.4em;
+      }
+      a {
+        color: var(--muted);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>BR Faker</h1>
+    <div class="site"><span id="host" class="muted">…</span><br /><span id="scope"></span></div>
+    <button id="fill">Fill this form</button>
+    <button id="allow" class="secondary" hidden>Allow this site</button>
+    <div id="status" class="muted"></div>
+    <a href="#" id="options">Manage allowed sites</a>
+    <script src="popup.js" type="module"></script>
+  </body>
+</html>

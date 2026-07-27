@@ -2,7 +2,7 @@ import * as bu from '@brazilian-utils/brazilian-utils';
 import { cnpj as alphanumericCnpj, cpf as cpfValidator } from 'cpf-cnpj-validator';
 import { describe, expect, it } from 'vitest';
 
-import { GENERATORS, allKeys, findGenerator, generate } from '../src/generators.js';
+import { GENERATORS, allKeys, findGenerator, generate } from '@br-faker/core';
 import { AREA_CODES, generateLandline, generateMobile } from '../src/phone.js';
 import { onlyDigits } from '../src/format.js';
 

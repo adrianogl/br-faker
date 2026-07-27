@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "BR Faker",
+  "version": "0.2.0",
+  "description": "Fills forms with valid Brazilian fake data: CPF, CNPJ, CEP, phone, name and address, as one coherent person.",
+  "permissions": ["activeTab", "scripting", "storage", "contextMenus"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "BR Faker",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "commands": {
+    "fill-form": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Fill the form on the current page"
+    }
+  },
+  "options_page": "options.html"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@br-faker/extension",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Chromium (MV3) extension that fills forms with Brazilian fake data",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@br-faker/core": "*"
+  }
+}

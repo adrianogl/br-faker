@@ -5,7 +5,7 @@
  * already carries a generated value in its title, so the result is visible
  * before pressing Enter; `arg` carries that same value to Copy to Clipboard.
  */
-import { GENERATORS, GROUP_LABELS, type Generator, generate } from './generators.js';
+import { GENERATORS, GROUP_LABELS, type Generator, generate } from '@br-faker/core';
 
 export interface AlfredItem {
   uid: string;

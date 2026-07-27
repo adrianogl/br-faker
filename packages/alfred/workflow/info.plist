@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>dev.aglv.alfred-br-faker</string>
+	<string>dev.aglv.br-faker</string>
 	<key>connections</key>
 	<dict>
 		<key>5B1F0C10-9E4A-4C2E-9B77-2E4D3F6A8C01</key>
@@ -138,6 +138,6 @@ Requires Node.js 20 or newer.</string>
 	<key>version</key>
 	<string>0.1.0</string>
 	<key>webaddress</key>
-	<string>https://github.com/adrianogl/alfred-br-faker</string>
+	<string>https://github.com/adrianogl/br-faker</string>
 </dict>
 </plist>

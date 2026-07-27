@@ -1,46 +1,33 @@
 {
-  "name": "alfred-br-faker",
-  "version": "0.1.0",
+  "name": "br-faker",
+  "version": "0.2.0",
   "private": true,
-  "description": "Alfred workflow that generates Brazilian fake data — CPF, CNPJ (numeric and alphanumeric), CNH, PIS, CEP, licence plate, voter ID and more",
-  "keywords": [
-    "alfred",
-    "alfred-workflow",
-    "faker",
-    "brazil",
-    "cpf",
-    "cnpj"
-  ],
+  "description": "Brazilian fake data: a shared generator core, an Alfred workflow and a browser extension that fills forms",
   "license": "MIT",
   "author": "Adriano Gonçalves",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "bin": {
-    "br-faker": "./dist/bin.js"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
+    "build": "npm run build --workspaces --if-present",
     "icon": "node scripts/build-icon.mjs",
     "banner": "node scripts/build-banner.mjs",
     "art": "npm run icon && npm run banner",
-    "workflow": "npm run build && npm run icon && node scripts/build-workflow.mjs",
+    "workflow": "npm run build -w @br-faker/alfred && npm run icon && node packages/alfred/scripts/build-workflow.mjs",
+    "extension": "npm run build -w @br-faker/extension && npm run icon && node packages/extension/scripts/build-extension.mjs",
     "verify": "npm run typecheck && npm run test && npm run build"
   },
-  "dependencies": {
-    "@brazilian-utils/brazilian-utils": "^2.3.0",
-    "@faker-js/faker": "^10.5.0",
-    "cpf-cnpj-validator": "^2.1.2"
-  },
   "devDependencies": {
+    "@types/chrome": "^0.0.287",
     "@types/node": "^22.10.0",
+    "jsdom": "^25.0.1",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

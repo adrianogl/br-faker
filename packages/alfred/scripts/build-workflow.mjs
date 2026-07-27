@@ -13,14 +13,17 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 const run = promisify(execFile);
-const root = dirname(dirname(fileURLToPath(import.meta.url)));
+// scripts/ -> packages/alfred
+const pkg = dirname(dirname(fileURLToPath(import.meta.url)));
+// packages/alfred -> repo root, where the release asset is expected.
+const repoRoot = dirname(dirname(pkg));
 
-const BUNDLE = join(root, 'dist', 'workflow', 'br-faker.cjs');
-const STAGING = join(root, 'dist', 'alfred-br-faker');
+const BUNDLE = join(pkg, 'dist', 'workflow', 'br-faker.cjs');
+const STAGING = join(pkg, 'dist', 'br-faker-workflow');
 
-// Committed at the repo root, not under the ignored dist/, so the file has a
-// stable download URL on GitHub and can be installed without cloning.
-const OUTPUT = join(root, 'alfred-br-faker.alfredworkflow');
+// Written to the repo root, where the release job picks it up. Gitignored:
+// releases carry the artefact so rebuilds do not pile zips into history.
+const OUTPUT = join(repoRoot, 'br-faker.alfredworkflow');
 
 async function exists(path) {
   try {
@@ -42,7 +45,7 @@ await mkdir(STAGING, { recursive: true });
 
 await copyFile(BUNDLE, join(STAGING, 'br-faker.cjs'));
 
-const workflowDir = join(root, 'workflow');
+const workflowDir = join(pkg, 'workflow');
 for (const entry of await readdir(workflowDir)) {
   await copyFile(join(workflowDir, entry), join(STAGING, entry));
 }
