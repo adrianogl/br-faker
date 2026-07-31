@@ -3,6 +3,7 @@ import * as bu from '@brazilian-utils/brazilian-utils';
 import { cnpj as alphanumericCnpj } from 'cpf-cnpj-validator';
 
 import { formatPostalCode, formatStreetAddress, onlyDigits } from './format.js';
+import { generatePassword } from './password.js';
 import { generateLandlineFormatted, generateMobileFormatted } from './phone.js';
 
 export type GroupId = 'documents' | 'person' | 'address' | 'company' | 'internet';
@@ -264,7 +265,7 @@ const generators: Generator[] = [
     label: 'Password',
     group: 'internet',
     aliases: ['senha'],
-    generate: () => faker.internet.password({ length: 16 }),
+    generate: () => generatePassword(),
   },
   {
     id: 'url',

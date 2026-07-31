@@ -2,6 +2,7 @@ import { fakerPT_BR as faker } from '@faker-js/faker';
 import * as bu from '@brazilian-utils/brazilian-utils';
 
 import { formatPhone, formatPostalCode, formatStreetAddress } from './format.js';
+import { generatePassword } from './password.js';
 import { generateLandline, generateMobile } from './phone.js';
 
 /**
@@ -137,6 +138,6 @@ export function generatePerson(): Person {
     stateCode: state.code,
     stateName: state.name,
     username: slugify(`${firstName}${lastName}`).slice(0, 14) + randomInt(1, 99),
-    password: faker.internet.password({ length: 16 }),
+    password: generatePassword(),
   };
 }
