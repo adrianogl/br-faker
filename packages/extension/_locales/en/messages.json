@@ -72,6 +72,43 @@
   "optionsSaveAllowed": {
     "message": "Save sites"
   },
+  "optionsFloatingTitle": {
+    "message": "Floating button"
+  },
+  "optionsFloatingLead": {
+    "message": "A button on top of the page, to fill without leaving the form. Appearing on its own needs your permission to access the allowed sites above — the same ones where filling was already permitted. Addresses Chrome cannot match, such as `[::1]`, are left out of the button and keep working through the shortcut and the popup."
+  },
+  "optionsFloatingToggle": {
+    "message": "Show the floating button on the allowed sites"
+  },
+  "optionsFloatingActive": {
+    "message": "Active on: $HOSTS. Reload any tab that was already open if the button is not there.",
+    "placeholders": {
+      "hosts": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsFloatingInactive": {
+    "message": "On, but Chrome registered the button on no site at all. Check the allowed sites and the access permission."
+  },
+  "optionsFloatingFailed": {
+    "message": "Chrome refused the request: $ERROR",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsFloatingDenied": {
+    "message": "Without access to the sites the button cannot appear."
+  },
+  "optionsFloatingNoHosts": {
+    "message": "No allowed site Chrome can match — save at least one hostname first."
+  },
+  "floatingLabel": {
+    "message": "Fill the form · drag to move · right-click maps a field"
+  },
   "optionsMappingsTitle": {
     "message": "Field mappings"
   },

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_SETTINGS, isAllowed, matchesPattern } from '../src/scope.js';
+import {
+  DEFAULT_ALLOWLIST,
+  DEFAULT_SETTINGS,
+  isAllowed,
+  matchesPattern,
+  originPatternsFor,
+} from '../src/scope.js';
 
 describe('matchesPattern', () => {
   it('matches an exact hostname', () => {
@@ -67,5 +73,40 @@ describe('isAllowed', () => {
 
   it('allows everything only when enforcement is deliberately off', () => {
     expect(isAllowed('https://example.com', { allowlist: [], enforce: false })).toBe(true);
+  });
+});
+
+describe('originPatternsFor', () => {
+  it('turns each allowed host into a match pattern', () => {
+    expect(originPatternsFor({ allowlist: ['localhost', '*.test'], enforce: true })).toEqual([
+      '*://localhost/*',
+      '*://*.test/*',
+    ]);
+  });
+
+  it('drops what Chrome cannot express as a pattern', () => {
+    // An IPv6 literal is the real case: it stays in the allowlist and keeps
+    // working through the shortcut, it just cannot carry a host permission.
+    const patterns = originPatternsFor({ allowlist: [...DEFAULT_ALLOWLIST], enforce: true });
+
+    expect(patterns).not.toContain('*://[::1]/*');
+    expect(patterns).toContain('*://127.0.0.1/*');
+    expect(patterns).toContain('*://*.localhost.dev/*');
+  });
+
+  it('asks for everything only when enforcement is off', () => {
+    // The button may appear wherever filling may happen, and that is the case
+    // where the user turned the allowlist off entirely.
+    expect(originPatternsFor({ allowlist: [], enforce: false })).toEqual(['*://*/*']);
+  });
+
+  it('asks for nothing when no host can be matched', () => {
+    expect(originPatternsFor({ allowlist: ['[::1]', '  '], enforce: true })).toEqual([]);
+  });
+
+  it('does not repeat a host listed twice', () => {
+    expect(originPatternsFor({ allowlist: ['localhost', 'LOCALHOST'], enforce: true })).toEqual([
+      '*://localhost/*',
+    ]);
   });
 });

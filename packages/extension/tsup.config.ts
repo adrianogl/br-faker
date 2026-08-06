@@ -8,6 +8,7 @@ export default defineConfig({
   entry: {
     background: 'src/background.ts',
     content: 'src/content.ts',
+    floating: 'src/floating.ts',
     picker: 'src/picker.ts',
     popup: 'src/popup.ts',
     options: 'src/options.ts',

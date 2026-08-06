@@ -72,6 +72,43 @@
   "optionsSaveAllowed": {
     "message": "Salvar sites"
   },
+  "optionsFloatingTitle": {
+    "message": "Botão flutuante"
+  },
+  "optionsFloatingLead": {
+    "message": "Um botão sobre a página, para preencher sem tirar a mão do formulário. Para aparecer sozinho ele precisa da sua permissão de acesso aos sites liberados acima — os mesmos onde o preenchimento já era permitido. Endereços que o Chrome não sabe casar, como `[::1]`, ficam de fora do botão e continuam funcionando pelo atalho e pelo popup."
+  },
+  "optionsFloatingToggle": {
+    "message": "Mostrar o botão flutuante nos sites liberados"
+  },
+  "optionsFloatingActive": {
+    "message": "Ativo em: $HOSTS. Recarregue as abas já abertas se o botão não estiver lá.",
+    "placeholders": {
+      "hosts": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsFloatingInactive": {
+    "message": "Ligado, mas o Chrome não registrou o botão em nenhum site. Verifique os sites liberados e a permissão de acesso."
+  },
+  "optionsFloatingFailed": {
+    "message": "O Chrome recusou o pedido: $ERROR",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsFloatingDenied": {
+    "message": "Sem a permissão de acesso aos sites o botão não aparece."
+  },
+  "optionsFloatingNoHosts": {
+    "message": "Nenhum site liberado que o Chrome consiga casar — salve pelo menos um host antes."
+  },
+  "floatingLabel": {
+    "message": "Preencher o formulário · arraste para mover · botão direito mapeia um campo"
+  },
   "optionsMappingsTitle": {
     "message": "Mapeamento de campos"
   },

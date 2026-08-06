@@ -63,6 +63,35 @@ export function isAllowed(url: string, settings: ScopeSettings): boolean {
   return settings.allowlist.some((pattern) => matchesPattern(hostname, pattern));
 }
 
+/**
+ * The allowlist as Chrome match patterns, for the permissions the floating
+ * button needs.
+ *
+ * Showing a button on a page before any gesture means a content script, and a
+ * content script means host permissions. Deriving them from the allowlist keeps
+ * the two in step: the button can only appear where filling was already
+ * allowed. Entries Chrome cannot express as a pattern are dropped — an IPv6
+ * literal like `[::1]` is one, and it keeps working through the shortcut and
+ * the popup, which need no host permission at all.
+ */
+export function originPatternsFor(settings: ScopeSettings): string[] {
+  if (!settings.enforce) return ['*://*/*'];
+
+  const patterns = settings.allowlist
+    .map((entry) => toMatchPattern(entry))
+    .filter((pattern): pattern is string => pattern !== null);
+
+  return [...new Set(patterns)];
+}
+
+const MATCHABLE_HOST = /^(\*\.)?[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/;
+
+function toMatchPattern(entry: string): string | null {
+  const host = entry.trim().toLowerCase();
+  if (!MATCHABLE_HOST.test(host)) return null;
+  return `*://${host}/*`;
+}
+
 /** The hostname to offer when the user wants to allow the current page. */
 export function hostnameOf(url: string): string | null {
   try {

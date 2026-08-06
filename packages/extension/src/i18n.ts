@@ -34,7 +34,10 @@ export function resolveCatalogue(language: Language, uiLanguage: string): Catalo
   if (language === 'auto') {
     return uiLanguage.toLowerCase().startsWith('pt') ? CATALOGUES.pt_BR : CATALOGUES.en;
   }
-  return CATALOGUES[language];
+  // Storage is synced across versions and can hold a language this build has
+  // no catalogue for. Without the fallback every lookup throws, and the caller
+  // that throws first is the one drawing the interface.
+  return CATALOGUES[language] ?? CATALOGUES.pt_BR;
 }
 
 /**
@@ -54,16 +57,24 @@ export async function initI18n(): Promise<void> {
 /**
  * Look up a message, with `$1`-style substitutions.
  *
- * Falls back to the key, which is a visible failure rather than a blank label.
+ * A message missing from the active catalogue falls back to the Portuguese one
+ * before falling back to the key: an interface that reads `popupFilled` is
+ * worse than one sentence in the wrong language. The key is the last resort,
+ * and a visible failure rather than a blank label.
  */
 export function t(key: string, ...substitutions: string[]): string {
-  const entry = current[key];
-  if (!entry) return key;
+  const message = messageFor(current, key);
+  if (message === undefined) return key;
 
   return substitutions.reduce(
-    (message, value, index) => message.replaceAll(`$${index + 1}`, value),
-    interpolate(entry.message, substitutions),
+    (text, value, index) => text.replaceAll(`$${index + 1}`, value),
+    interpolate(message, substitutions),
   );
+}
+
+/** The raw message, from the active catalogue or from the Portuguese one. */
+export function messageFor(catalogue: Catalogue, key: string): string | undefined {
+  return (catalogue[key] ?? CATALOGUES.pt_BR[key])?.message;
 }
 
 /**

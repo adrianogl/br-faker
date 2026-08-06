@@ -15,7 +15,7 @@ every tagged release. Verified against the store's hard limits:
 | Description ≤ 132 chars | 127 (pt-BR), 108 (en) |
 | 128×128 icon | present |
 | No remotely hosted code | none — no `importScripts`, `eval`, `new Function`, `fetch`, `XHR` or dynamic `import` |
-| Host permissions | none requested |
+| Host permissions | none required; `*://*/*` is declared *optional* and requested only if the user turns the floating button on |
 
 The version in `manifest.json` is taken from the root `package.json` at build
 time. The store rejects a re-upload of a version it already has, so bump it
@@ -124,6 +124,7 @@ reviewers reject vague answers.
 | `scripting` | Injects the form-filling script, and the field-picking script, into that one tab at the moment of that gesture. Nothing is injected automatically or in the background. |
 | `storage` | Stores the user's own settings: the list of sites they allow filling on, the manual field mappings they create, and their interface language. No browsing data of any kind. |
 | `contextMenus` | Adds a single right-click entry, "fill this form with fake data", as an alternative to the keyboard shortcut. |
+| `optional_host_permissions` (`*://*/*`) | Only for the optional floating fill button, which is off by default. When the user switches it on, the extension requests access to the sites on their own allowlist — not the pattern in the manifest — and registers a content script for exactly those sites. Turning the switch off, clearing the list or revoking the permission unregisters it. The button draws itself and reads the form only when clicked, as the shortcut does. |
 
 ## Data usage disclosures
 
@@ -157,23 +158,92 @@ listing can be updated from any machine.
 
 ## Screenshots
 
-Not generated. The store requires screenshots to show the extension as it
-really is, and a drawing of an interface is not a picture of one — these have to
-be captured from the running extension.
+Not generated, and not generatable. The store requires screenshots to show the
+extension as it really is, and a drawing of an interface is not a picture of
+one. They are captured from the running extension — see step 1 of the
+walkthrough below.
 
-At least one is required, at 1280×800 or 640×400 (1280×800 looks better).
-Capture these in a Chromium browser with the extension loaded:
+## Submission walkthrough
 
-1. **The popup over a form** — shows the site scope and the fill button
-2. **A filled form** — the payoff, with CPF, CNPJ and address visible
-3. **The picker mid-selection** — a field highlighted with the type menu open
-4. **The options page** — allowed sites and field mappings
+Follow this in order. Step 1 is the only part that cannot be prepared in
+advance, so do it first rather than discovering it missing halfway through the
+form.
 
-A local form for these lives in the repo discussion; any signup form on
-`localhost` works, since that origin is allowed out of the box.
+### 1. Capture the screenshots
 
-## What happens after upload
+At **1280×800**, with the extension loaded in a Chromium browser:
 
-Review usually takes a few days. Extensions that request no host permissions and
-load no remote code tend to clear quickly, which is most of why the extension is
-built the way it is.
+1. The popup open over a form — shows the site scope and the fill button
+2. A filled form — the payoff, with CPF, CNPJ and address visible
+3. The picker mid-selection — a field highlighted, the type menu open
+4. The options page — allowed sites and field mappings
+
+Any signup form on `localhost` works, since that origin is allowed out of the
+box. On macOS, `⇧⌘4` then space captures a whole window.
+
+### 2. Create the developer account
+
+https://chrome.google.com/webstore/devconsole — a one-off **US$5**, charged per
+account rather than per extension.
+
+### 3. Upload the package
+
+**New item**, then the `br-faker-extension.zip` from the
+[latest release](https://github.com/adrianogl/br-faker/releases/latest). Use
+that file rather than a local build: the release artefact is compiled by CI from
+the tagged source, so what reaches the store matches what is published.
+
+### 4. Fill in the listing
+
+| Field | Where it comes from |
+| --- | --- |
+| Short description | Taken from the manifest — nothing to type |
+| Detailed description | The "Listing copy" section above |
+| Category | Developer Tools |
+| Primary language | Portuguese (Brazil) |
+| Small tile 440×280 | `assets/store/promo-small.png` |
+| Marquee 1400×560 | `assets/store/promo-marquee.png` |
+| Screenshots | The ones captured in step 1 |
+
+### 5. Privacy practices
+
+This is where most submissions stall, and where this extension has an easy time.
+
+- **Single purpose**: `Fill web forms with valid Brazilian test data.`
+- **Permission justifications**: copy the five from the table above, verbatim.
+  Reviewers reject vague answers.
+- **Data usage**: tick **no** for every collection category.
+- **Certifications**: sign all three.
+- **Privacy policy URL**: https://github.com/adrianogl/br-faker/blob/main/PRIVACY.md
+
+### 6. Distribution
+
+Visibility **public**, all regions, then **Submit for review**.
+
+## Answering the reviewer
+
+Review runs from a few days to a couple of weeks. Extensions that request no
+host permissions and load no remote code tend to clear faster, which is most of
+why this one is built the way it is.
+
+Two things in the package can still prompt a question, so here are the answers
+ready.
+
+**"Why `scripting` with no declared `content_scripts`?"**
+Because nothing is injected automatically. The filler and the picker are
+injected into a single tab, at the moment the user invokes them, under
+`activeTab` — which is exactly what lets the extension ask for no host
+permission on install.
+
+**"What registers a content script at runtime?"**
+The optional floating button, and only after the user turns it on and grants
+access to the sites on their allowlist. `chrome.scripting.registerContentScripts`
+is called with those sites as its matches, never with the manifest's optional
+pattern, and the script is unregistered as soon as the switch, the list or the
+permission goes away.
+
+**"What is `cdn.jsdelivr.net` doing in the bundle?"**
+It is a URL template inside the bundled faker library, belonging to a portrait
+generator this extension never calls. There is no `fetch`, `XHR`,
+`importScripts`, `eval` or dynamic `import` anywhere in the package, so nothing
+can load it. Verified against the packaged zip.

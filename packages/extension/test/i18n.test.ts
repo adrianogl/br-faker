@@ -2,7 +2,14 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-import { DEFAULT_LANGUAGE, applyTranslations, resolveCatalogue, t } from '../src/i18n.js';
+import {
+  DEFAULT_LANGUAGE,
+  type Language,
+  applyTranslations,
+  messageFor,
+  resolveCatalogue,
+  t,
+} from '../src/i18n.js';
 import { OVERRIDE_TARGETS } from '../src/overrides.js';
 
 const EXTENSION = join(import.meta.dirname, '..');
@@ -126,6 +133,15 @@ describe('Portuguese is the default, not the browser\u2019s choice', () => {
     expect(resolveCatalogue('auto', 'ja').popupFill!.message).toBe('Fill this form');
   });
 
+  it('falls back to Portuguese for a language it has no catalogue for', () => {
+    // storage.sync carries settings between versions, so a stored language can
+    // outlive its catalogue. Returning undefined here threw on every lookup and
+    // took the whole interface down with it.
+    expect(resolveCatalogue('es' as Language, 'pt-BR').popupFill!.message).toBe(
+      'Preencher este formulário',
+    );
+  });
+
   it('still declares default_locale, which Chrome uses for the manifest strings', () => {
     const manifest = JSON.parse(readFileSync(join(SRC, 'manifest.json'), 'utf8'));
     expect(manifest.default_locale).toBe('pt_BR');
@@ -144,6 +160,14 @@ describe('t and applyTranslations', () => {
 
   it('returns the key for a message that does not exist', () => {
     expect(t('naoExiste')).toBe('naoExiste');
+  });
+
+  it('answers from the Portuguese catalogue when the active one lacks the key', () => {
+    // A raw `popupFilled` on screen is the failure this prevents: one sentence
+    // in the wrong language beats an identifier where a message should be.
+    const incomplete = { extName: { message: 'BR Faker' } };
+    expect(messageFor(incomplete, 'popupFilled')).toBe('$COUNT campo(s) preenchido(s).');
+    expect(messageFor(incomplete, 'naoExiste')).toBeUndefined();
   });
 
   it('fills text and placeholders from data attributes', () => {
