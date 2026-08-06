@@ -81,6 +81,9 @@ const referenced = [
   manifest.action.default_popup,
   manifest.options_page,
   'content.js',
+  // Registered at runtime rather than by the manifest, which means nothing
+  // here would catch it going missing.
+  'floating.js',
   ...Object.values(manifest.icons),
 ];
 

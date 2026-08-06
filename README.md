@@ -51,7 +51,7 @@ The code is in English, but Portuguese aliases are first-class — `nome`, `ende
 
 **[⬇ Download the latest release](https://github.com/adrianogl/br-faker/releases/latest/download/br-faker-extension.zip)**, unzip it, then load it unpacked from `chrome://extensions` with developer mode on. Works in any Chromium browser — Chrome, Edge, Brave, Arc, Dia.
 
-Press **⌘⇧Y** (Ctrl+Shift+Y elsewhere) and the form fills. The toolbar popup and the right-click menu do the same thing.
+Press **⌘⇧Y** (Ctrl+Shift+Y elsewhere) and the form fills. The toolbar popup, the right-click menu and the optional floating button do the same thing.
 
 ### Which sites it may fill
 
@@ -63,7 +63,13 @@ localhost   127.0.0.1   [::1]   *.localhost   *.local   *.test
 
 Anywhere else, the popup says the site is out of scope and offers a one-click **Allow this site**. A leading `*.` matches subdomains but deliberately not the bare domain, so widening the scope stays an explicit act. Manage the list from the options page.
 
-The extension asks for **no host permissions at all**. `activeTab` grants access to one tab, for one gesture, when you invoke it — nothing is injected into pages you have not asked about.
+By default the extension asks for **no host permissions at all**. `activeTab` grants access to one tab, for one gesture, when you invoke it — nothing is injected into pages you have not asked about.
+
+### The floating button
+
+Off by default. Turn it on from the options page and a round button sits on top of the allowed sites: click it to fill, drag it out of the way of a field (its place is remembered per site), right-click it to map a field.
+
+Being there *before* any gesture is the whole point, and that is the one thing `activeTab` cannot do — so switching it on asks for access to the sites on your allowlist, and nowhere else. Revoke the permission, empty the list or turn the switch off and the script that draws it is unregistered. Hosts Chrome cannot express as a match pattern — `[::1]` — are left out of the request; they keep filling through the shortcut and the popup.
 
 ### One coherent person, not a bag of random values
 
@@ -95,7 +101,7 @@ Masked inputs get a second pass: after writing, the alphanumerics that landed ar
 
 ```bash
 npm install
-npm test          # 109 tests
+npm test          # 212 tests
 npm run verify    # typecheck + test + build
 npm run workflow  # package the .alfredworkflow
 npm run extension # package the extension and load it from packages/extension/dist
@@ -116,6 +122,7 @@ Releasing is a tag: `git tag v0.3.0 && git push origin v0.3.0`. GitHub Actions r
 | `packages/extension/src/fields.ts` | Field detection and scoring |
 | `packages/extension/src/apply.ts` | Framework-safe value setting and visibility |
 | `packages/extension/src/scope.ts` | The allowlist that decides which sites may be filled |
+| `packages/extension/src/floating-button.ts` | The in-page button: shadow DOM, drag, remembered position |
 | `scripts/artwork.mjs` | Emblem proportions and palette, shared by icon and banner |
 
 The artwork is generated rather than committed as opaque binaries someone has to take on trust. `build-icon.mjs` rasterises the shapes into PNGs using signed distance fields and Node's built-in zlib; `build-banner.mjs` emits the same shapes as SVG. Changing the artwork is a code review, not a file swap.
