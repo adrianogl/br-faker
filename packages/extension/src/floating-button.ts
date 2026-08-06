@@ -120,12 +120,19 @@ const STYLE = `
     cursor: grab;
     touch-action: none;
     pointer-events: auto;
-    transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+    /* Faded until pointed at: it sits over someone's form all day, and a solid
+       badge in the corner competes with the page it is there to help with. */
+    opacity: 0.35;
+    transition: opacity 120ms ease-out, transform 120ms ease-out, box-shadow 120ms ease-out;
   }
+  .button:hover,
+  .button:focus-visible,
+  .button[data-dragging='true'],
+  .button[data-busy='true'] { opacity: 1; }
   .button:hover { transform: scale(1.06); }
   .button:focus-visible { outline: 2px solid #1ab554; outline-offset: 3px; }
   .button[data-dragging='true'] { cursor: grabbing; transform: scale(1.06); }
-  .button[data-busy='true'] { opacity: 0.65; cursor: progress; }
+  .button[data-busy='true'] { cursor: progress; }
   .button svg { width: 30px; height: 30px; display: block; }
   .status {
     position: fixed;
