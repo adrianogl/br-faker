@@ -81,6 +81,25 @@
   "optionsFloatingToggle": {
     "message": "Mostrar o botão flutuante nos sites liberados"
   },
+  "optionsFloatingActive": {
+    "message": "Ativo em: $HOSTS. Recarregue as abas já abertas se o botão não estiver lá.",
+    "placeholders": {
+      "hosts": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsFloatingInactive": {
+    "message": "Ligado, mas o Chrome não registrou o botão em nenhum site. Verifique os sites liberados e a permissão de acesso."
+  },
+  "optionsFloatingFailed": {
+    "message": "O Chrome recusou o pedido: $ERROR",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
   "optionsFloatingDenied": {
     "message": "Sem a permissão de acesso aos sites o botão não aparece."
   },

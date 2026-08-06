@@ -70,6 +70,21 @@ async function runFill(tab: chrome.tabs.Tab): Promise<FillOutcome> {
  * have to be granted. Losing either takes the script back off — a permission
  * revoked in Chrome's settings has to actually stop it.
  */
+export interface FloatingState {
+  registered: boolean;
+  matches: string[];
+  error?: string;
+}
+
+/**
+ * Why the button is not on the page.
+ *
+ * Registration fails as a rejected promise — one pattern Chrome dislikes and
+ * the whole call goes — and swallowing that leaves a switch that says "on" over
+ * a page with no button. The options page reads this back.
+ */
+let floatingError: string | undefined;
+
 async function syncFloatingButton(): Promise<void> {
   const settings = await readSettings();
   const origins = originPatternsFor(settings);
@@ -99,10 +114,34 @@ async function syncFloatingButton(): Promise<void> {
   try {
     if (registered) await chrome.scripting.updateContentScripts([script]);
     else await chrome.scripting.registerContentScripts([script]);
-  } catch {
+    floatingError = undefined;
+  } catch (error) {
     // A pattern Chrome rejects must not leave a half-registered script behind.
+    floatingError = error instanceof Error ? error.message : String(error);
     await chrome.scripting.unregisterContentScripts({ ids: [FLOATING_SCRIPT_ID] }).catch(() => {});
+    return;
   }
+
+  await drawOnOpenTabs(origins);
+}
+
+/**
+ * Registering only covers the next navigation, and the tab the user turned the
+ * button on from is already open — waiting for a reload reads as "it did not
+ * work". The script guards against running twice, so injecting here is safe
+ * even where the registration has already fired.
+ */
+async function drawOnOpenTabs(origins: string[]): Promise<void> {
+  const tabs = await chrome.tabs.query({ url: origins }).catch(() => []);
+
+  await Promise.all(
+    tabs.map(async (tab) => {
+      if (!tab.id) return;
+      await chrome.scripting
+        .executeScript({ target: { tabId: tab.id }, files: ['floating.js'] })
+        .catch(() => undefined);
+    }),
+  );
 }
 
 async function activeTab(): Promise<chrome.tabs.Tab | undefined> {
@@ -163,6 +202,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       } catch {
         sendResponse({ ok: false, reason: 'injection-failed' });
       }
+    })();
+
+    return true;
+  }
+
+  if (message?.type === 'floating-state') {
+    void (async () => {
+      const [registered] = await chrome.scripting.getRegisteredContentScripts({
+        ids: [FLOATING_SCRIPT_ID],
+      });
+
+      sendResponse({
+        registered: Boolean(registered),
+        matches: registered?.matches ?? [],
+        error: floatingError,
+      } satisfies FloatingState);
     })();
 
     return true;

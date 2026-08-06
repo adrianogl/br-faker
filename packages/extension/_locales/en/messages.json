@@ -81,6 +81,25 @@
   "optionsFloatingToggle": {
     "message": "Show the floating button on the allowed sites"
   },
+  "optionsFloatingActive": {
+    "message": "Active on: $HOSTS. Reload any tab that was already open if the button is not there.",
+    "placeholders": {
+      "hosts": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsFloatingInactive": {
+    "message": "On, but Chrome registered the button on no site at all. Check the allowed sites and the access permission."
+  },
+  "optionsFloatingFailed": {
+    "message": "Chrome refused the request: $ERROR",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
   "optionsFloatingDenied": {
     "message": "Without access to the sites the button cannot appear."
   },

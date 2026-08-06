@@ -1,3 +1,4 @@
+import type { FloatingState } from './background.js';
 import { DEFAULT_LANGUAGE, type Language, applyTranslations, initI18n, t } from './i18n.js';
 import { type FieldOverride, parseOverrides, serialiseOverrides } from './overrides.js';
 import { FLOATING_DEFAULTS, type FloatingSettings } from './floating-button.js';
@@ -45,6 +46,7 @@ async function load(): Promise<void> {
   allowlistEl.value = settings.allowlist.join('\n');
   enforceEl.checked = settings.enforce;
   floatingEl.checked = settings.floatingButton;
+  if (settings.floatingButton) await reportFloatingState();
 
   const { overrides } = (await chrome.storage.sync.get({ overrides: [] })) as {
     overrides: FieldOverride[];
@@ -70,10 +72,20 @@ function editedScope(): ScopeSettings {
  * still being handled, so it is called before anything is awaited — an `await`
  * first and Chrome refuses the prompt as gestureless.
  */
+/** Match patterns read back as the hostnames the user typed. */
+function hostsOf(patterns: string[]): string[] {
+  return patterns.map((pattern) => pattern.replace('*://', '').replace('/*', ''));
+}
+
 function requestFloatingAccess(scope: ScopeSettings): Promise<boolean> {
   const origins = originPatternsFor(scope);
   if (origins.length === 0) return Promise.resolve(false);
-  return chrome.permissions.request({ origins });
+  // A pattern Chrome refuses rejects the promise. Reporting the message beats
+  // a switch that flips back with no explanation.
+  return chrome.permissions.request({ origins }).catch((error: Error) => {
+    floatingStatus.textContent = t('optionsFloatingFailed', error.message);
+    return false;
+  });
 }
 
 document.getElementById('save-allowlist')?.addEventListener('click', () => {
@@ -121,9 +133,30 @@ floatingEl.addEventListener('change', () => {
     }
 
     await chrome.storage.sync.set({ ...scope, floatingButton: true });
-    flash(floatingStatus, t('optionsSaved'));
+    await reportFloatingState();
   })();
 });
+
+/**
+ * Report what the service worker actually managed to register.
+ *
+ * "Saved" is not the same as "the button is on your pages": the registration
+ * can still be refused, and this is where that becomes visible.
+ */
+async function reportFloatingState(): Promise<void> {
+  const state: FloatingState | undefined = await chrome.runtime.sendMessage({
+    type: 'floating-state',
+  });
+
+  if (state?.error) {
+    floatingStatus.textContent = t('optionsFloatingFailed', state.error);
+    return;
+  }
+
+  floatingStatus.textContent = state?.registered
+    ? t('optionsFloatingActive', hostsOf(state.matches).join(', '))
+    : t('optionsFloatingInactive');
+}
 
 document.getElementById('save-overrides')?.addEventListener('click', async () => {
   const { overrides, errors } = parseOverrides(overridesEl.value);
@@ -150,7 +183,13 @@ languageEl?.addEventListener('change', async () => {
 });
 
 void (async () => {
-  await initI18n();
-  applyTranslations();
-  await load();
+  try {
+    await initI18n();
+    applyTranslations();
+    await load();
+  } catch (error) {
+    // A page that failed to start looks like a page that ignores its controls,
+    // and the console is not where anyone looks first.
+    floatingStatus.textContent = t('optionsFloatingFailed', String(error));
+  }
 })();

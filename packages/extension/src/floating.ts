@@ -93,20 +93,33 @@ async function sync(): Promise<void> {
   }
 }
 
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== 'sync' || !WATCHED_KEYS.some((key) => key in changes)) return;
-
+async function refresh(): Promise<void> {
   // Rebuilt rather than patched: the label comes from the catalogue, and the
   // language is one of the settings being watched.
-  void (async () => {
-    await initI18n();
-    button?.destroy();
-    button = null;
-    await sync();
-  })();
-});
-
-void (async () => {
   await initI18n();
+  button?.destroy();
+  button = null;
   await sync();
-})();
+}
+
+declare global {
+  interface Window {
+    __brFakerFloating?: boolean;
+  }
+}
+
+/**
+ * The script arrives twice on the tab the button was switched on from: once
+ * injected into the open page, once registered for the next load. Listeners are
+ * attached on the first run only; a second run just re-syncs.
+ */
+if (!window.__brFakerFloating) {
+  window.__brFakerFloating = true;
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'sync' || !WATCHED_KEYS.some((key) => key in changes)) return;
+    void refresh();
+  });
+}
+
+void refresh();
