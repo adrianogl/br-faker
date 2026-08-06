@@ -67,7 +67,9 @@ By default the extension asks for **no host permissions at all**. `activeTab` gr
 
 ### The floating button
 
-Off by default. Turn it on from the options page and a round button sits on top of the allowed sites: click it to fill, drag it out of the way of a field (its place is remembered per site), right-click it to map a field.
+Off by default. Turn it on from the options page and a round button sits on top of the allowed sites: click it to fill, drag it out of the way of a field (its place is remembered per site), right-click it to map a field. It rests faded and only comes forward when pointed at, focused or working — it spends the day over someone's form, and a solid badge in the corner competes with the page it is there to help with.
+
+Switching it on reaches the tabs you already have open, so there is no reload to guess at, and the options page reports back which hosts Chrome actually registered — or why it refused — instead of a bare "saved".
 
 Being there *before* any gesture is the whole point, and that is the one thing `activeTab` cannot do — so switching it on asks for access to the sites on your allowlist, and nowhere else. Revoke the permission, empty the list or turn the switch off and the script that draws it is unregistered. Hosts Chrome cannot express as a match pattern — `[::1]` — are left out of the request; they keep filling through the shortcut and the popup.
 
@@ -101,7 +103,7 @@ Masked inputs get a second pass: after writing, the alphanumerics that landed ar
 
 ```bash
 npm install
-npm test          # 212 tests
+npm test          # 217 tests
 npm run verify    # typecheck + test + build
 npm run workflow  # package the .alfredworkflow
 npm run extension # package the extension and load it from packages/extension/dist
