@@ -1,4 +1,5 @@
 import type { FloatingState } from './background.js';
+import { EMAIL_DEFAULTS, type EmailSettings, aliasFor, parseEmailBase } from './email.js';
 import { DEFAULT_LANGUAGE, type Language, applyTranslations, initI18n, t } from './i18n.js';
 import { type FieldOverride, parseOverrides, serialiseOverrides } from './overrides.js';
 import { FLOATING_DEFAULTS, type FloatingSettings } from './floating-button.js';
@@ -19,6 +20,10 @@ const allowlistStatus = document.getElementById('allowlist-status') as HTMLEleme
 
 const floatingEl = document.getElementById('floating') as HTMLInputElement;
 const floatingStatus = document.getElementById('floating-status') as HTMLElement;
+
+const emailBaseEl = document.getElementById('email-base') as HTMLInputElement;
+const emailStatus = document.getElementById('email-status') as HTMLElement;
+const emailPreview = document.getElementById('email-preview') as HTMLElement;
 
 const overridesEl = document.getElementById('overrides') as HTMLTextAreaElement;
 const overridesStatus = document.getElementById('overrides-status') as HTMLElement;
@@ -47,6 +52,10 @@ async function load(): Promise<void> {
   enforceEl.checked = settings.enforce;
   floatingEl.checked = settings.floatingButton;
   if (settings.floatingButton) await reportFloatingState();
+
+  const { emailBase } = (await chrome.storage.sync.get(EMAIL_DEFAULTS)) as EmailSettings;
+  emailBaseEl.value = emailBase;
+  showEmailPreview();
 
   const { overrides } = (await chrome.storage.sync.get({ overrides: [] })) as {
     overrides: FieldOverride[];
@@ -157,6 +166,46 @@ async function reportFloatingState(): Promise<void> {
     ? t('optionsFloatingActive', hostsOf(state.matches).join(', '))
     : t('optionsFloatingInactive');
 }
+
+/**
+ * Show what the next fill would type.
+ *
+ * The tagged form is the whole point of the setting and nothing else on the
+ * page reveals it, so an example beats a sentence describing the rule.
+ */
+function showEmailPreview(): void {
+  // An error from the last save must not sit next to a preview of an address
+  // that now parses — the two read as contradicting each other.
+  emailStatus.textContent = '';
+  const base = parseEmailBase(emailBaseEl.value);
+  emailPreview.textContent = base ? t('optionsEmailPreview', aliasFor(base)) : '';
+}
+
+emailBaseEl.addEventListener('input', showEmailPreview);
+
+document.getElementById('save-email')?.addEventListener('click', async () => {
+  const typed = emailBaseEl.value.trim();
+
+  if (!typed) {
+    emailBaseEl.value = '';
+    await chrome.storage.sync.set({ emailBase: '' });
+    flash(emailStatus, t('optionsEmailCleared'));
+    return;
+  }
+
+  const base = parseEmailBase(typed);
+  if (!base) {
+    emailStatus.textContent = t('optionsEmailInvalid');
+    return;
+  }
+
+  // Saved without the tag it may have been pasted with, so the field shows
+  // exactly what the aliases will be built from.
+  emailBaseEl.value = `${base.local}@${base.domain}`;
+  await chrome.storage.sync.set({ emailBase: emailBaseEl.value });
+  showEmailPreview();
+  flash(emailStatus, t('optionsSaved'));
+});
 
 document.getElementById('save-overrides')?.addEventListener('click', async () => {
   const { overrides, errors } = parseOverrides(overridesEl.value);

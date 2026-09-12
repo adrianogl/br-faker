@@ -158,6 +158,13 @@ describe('t and applyTranslations', () => {
     expect(t('popupAllowed', 'localhost')).toBe('localhost liberado.');
   });
 
+  it('does not read a substituted value as another placeholder', () => {
+    // The email preview passes an address the user typed, and `$` is legal in
+    // a local part. Filling the slot must not hand the value back to be filled
+    // in again.
+    expect(t('popupAllowed', 'a$1b.com')).toBe('a$1b.com liberado.');
+  });
+
   it('returns the key for a message that does not exist', () => {
     expect(t('naoExiste')).toBe('naoExiste');
   });

@@ -66,10 +66,7 @@ export function t(key: string, ...substitutions: string[]): string {
   const message = messageFor(current, key);
   if (message === undefined) return key;
 
-  return substitutions.reduce(
-    (text, value, index) => text.replaceAll(`$${index + 1}`, value),
-    interpolate(message, substitutions),
-  );
+  return interpolate(message, substitutions);
 }
 
 /** The raw message, from the active catalogue or from the Portuguese one. */
@@ -81,11 +78,14 @@ export function messageFor(catalogue: Catalogue, key: string): string | undefine
  * Chrome's catalogues name their slots (`$COUNT$`) and map them to positional
  * arguments through a `placeholders` block. The same files are read here, so
  * the named form has to be understood too.
+ *
+ * Both forms are filled in one pass, deliberately: substituting them one after
+ * the other would let a `$1` inside a value — and one value is an address the
+ * user typed — be read as another slot and replaced again.
  */
 function interpolate(message: string, substitutions: string[]): string {
-  return message.replace(/\$([A-Za-z_]+)\$?/g, (match, name: string) => {
-    const index = Number(name.replace(/\D/g, ''));
-    if (index > 0) return substitutions[index - 1] ?? match;
+  return message.replace(/\$(\d+)|\$([A-Za-z_]+)\$?/g, (match, position?: string) => {
+    if (position) return substitutions[Number(position) - 1] ?? match;
 
     // Named placeholder: the catalogues use one per message, in order.
     return substitutions[0] ?? match;
