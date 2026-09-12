@@ -109,6 +109,29 @@
   "floatingLabel": {
     "message": "Preencher o formulário · arraste para mover · botão direito mapeia um campo"
   },
+  "optionsEmailTitle": {
+    "message": "Seu próprio email"
+  },
+  "optionsEmailLead": {
+    "message": "Em branco, o preenchimento inventa um email. Com o seu endereço aqui, todo preenchimento passa a usá-lo com uma marca depois do `+`, com data e hora — o Gmail e a maioria dos provedores entregam tudo na mesma caixa, e uma marca que anda com o relógio evita que o site recuse um endereço que ele já tem cadastrado. É o único dado real que a extensão guarda, e ele viaja na sincronização da conta do Chrome como as outras configurações."
+  },
+  "optionsSaveEmail": {
+    "message": "Salvar email"
+  },
+  "optionsEmailPreview": {
+    "message": "O próximo preenchimento usaria $EXAMPLE",
+    "placeholders": {
+      "example": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsEmailInvalid": {
+    "message": "Não salvo — isso não é um endereço de email."
+  },
+  "optionsEmailCleared": {
+    "message": "Em branco: voltando ao email gerado."
+  },
   "optionsMappingsTitle": {
     "message": "Mapeamento de campos"
   },

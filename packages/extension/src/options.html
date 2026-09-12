@@ -60,6 +60,18 @@
         align-items: center;
         margin: 16px 0;
       }
+      input[type='email'] {
+        width: 100%;
+        max-width: 320px;
+        margin-right: 8px;
+        padding: 9px 10px;
+        font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: inherit;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        box-sizing: border-box;
+      }
       select {
         padding: 8px 10px;
         font: inherit;
@@ -133,6 +145,15 @@
         <span data-i18n="optionsFloatingToggle"></span>
       </label>
       <footer id="floating-status"></footer>
+    </section>
+
+    <section>
+      <h2 data-i18n="optionsEmailTitle">Your own email</h2>
+      <p class="lead" data-i18n="optionsEmailLead"></p>
+      <input type="email" id="email-base" spellcheck="false" placeholder="voce@gmail.com" />
+      <button id="save-email" data-i18n="optionsSaveEmail"></button>
+      <span id="email-status" class="status"></span>
+      <footer id="email-preview"></footer>
     </section>
 
     <section>

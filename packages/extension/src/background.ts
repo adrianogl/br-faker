@@ -7,6 +7,7 @@ import {
   FLOATING_SCRIPT_ID,
   type FloatingSettings,
 } from './floating-button.js';
+import { EMAIL_DEFAULTS, type EmailSettings, withEmailAlias } from './email.js';
 import { type FieldOverride, overridesFor, upsertOverride } from './overrides.js';
 import { DEFAULT_SETTINGS, type ScopeSettings, isAllowed, originPatternsFor } from './scope.js';
 
@@ -30,9 +31,13 @@ export interface FillOutcome {
   skipped?: number;
 }
 
-async function readSettings(): Promise<ScopeSettings & FloatingSettings> {
-  const stored = await chrome.storage.sync.get({ ...DEFAULT_SETTINGS, ...FLOATING_DEFAULTS });
-  return stored as ScopeSettings & FloatingSettings;
+async function readSettings(): Promise<ScopeSettings & FloatingSettings & EmailSettings> {
+  const stored = await chrome.storage.sync.get({
+    ...DEFAULT_SETTINGS,
+    ...FLOATING_DEFAULTS,
+    ...EMAIL_DEFAULTS,
+  });
+  return stored as ScopeSettings & FloatingSettings & EmailSettings;
 }
 
 async function readOverrides(): Promise<FieldOverride[]> {
@@ -236,8 +241,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message?.type === 'payload') {
     void (async () => {
-      const overrides = overridesFor(message.url ?? '', await readOverrides());
-      sendResponse({ person: generatePerson(), overrides });
+      const [stored, { emailBase }] = await Promise.all([readOverrides(), readSettings()]);
+      const overrides = overridesFor(message.url ?? '', stored);
+      sendResponse({ person: withEmailAlias(generatePerson(), emailBase), overrides });
     })();
 
     return true;

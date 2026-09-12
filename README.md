@@ -79,6 +79,16 @@ Filling a whole form needs more than independent values. faker's pt_BR locale in
 
 `generatePerson()` draws once and derives the rest: the city is a real municipality of the drawn state (from brazilian-utils' 5,570-municipality dataset), the email comes from the person's own name, and the CEP falls inside that state's range.
 
+### Filling with your own email
+
+A generated email is right for a throwaway form and wrong for one that sends a confirmation link. Put your own address in the options page and every fill uses it instead, tagged after a `+` with the moment of the fill:
+
+```
+adgoleva@gmail.com  →  adgoleva+260911t143012@gmail.com
+```
+
+Gmail and most providers deliver anything after the `+` to the same inbox, so one address covers every signup — and a tag that moves with the clock keeps a site from refusing an address it already has on file. Reading the tag back in the inbox says which test the message came from. Leave the field empty and the email goes back to being derived from the generated name. A tag you paste in yourself is dropped rather than stacked, since `you+teste+260911t143012@gmail.com` is not routed by most providers. It is the one real thing the extension stores, and like every other setting it rides Chrome's account sync.
+
 ### How fields are matched
 
 Detection reads every signal a control gives away and scores it in tiers, because no single one is reliable:
@@ -103,7 +113,7 @@ Masked inputs get a second pass: after writing, the alphanumerics that landed ar
 
 ```bash
 npm install
-npm test          # 217 tests
+npm test          # 234 tests
 npm run verify    # typecheck + test + build
 npm run workflow  # package the .alfredworkflow
 npm run extension # package the extension and load it from packages/extension/dist
@@ -124,6 +134,7 @@ Releasing is a tag: `git tag v0.3.0 && git push origin v0.3.0`. GitHub Actions r
 | `packages/extension/src/fields.ts` | Field detection and scoring |
 | `packages/extension/src/apply.ts` | Framework-safe value setting and visibility |
 | `packages/extension/src/scope.ts` | The allowlist that decides which sites may be filled |
+| `packages/extension/src/email.ts` | Your own address, tagged per fill, in place of the generated one |
 | `packages/extension/src/floating-button.ts` | The in-page button: shadow DOM, drag, remembered position |
 | `scripts/artwork.mjs` | Emblem proportions and palette, shared by icon and banner |
 

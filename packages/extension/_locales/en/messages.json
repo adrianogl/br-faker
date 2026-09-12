@@ -109,6 +109,29 @@
   "floatingLabel": {
     "message": "Fill the form · drag to move · right-click maps a field"
   },
+  "optionsEmailTitle": {
+    "message": "Your own email"
+  },
+  "optionsEmailLead": {
+    "message": "Leave it empty and the fill invents an email. Put your address here and every fill uses it instead, tagged after a `+` with the date and time — Gmail and most providers deliver it to the same inbox, and a tag that moves with the clock keeps a site from refusing an address it already has on file. It is the one real thing the extension stores, and it rides Chrome's account sync like the other settings."
+  },
+  "optionsSaveEmail": {
+    "message": "Save email"
+  },
+  "optionsEmailPreview": {
+    "message": "The next fill would use $EXAMPLE",
+    "placeholders": {
+      "example": {
+        "content": "$1"
+      }
+    }
+  },
+  "optionsEmailInvalid": {
+    "message": "Not saved — that is not an email address."
+  },
+  "optionsEmailCleared": {
+    "message": "Empty: back to the generated email."
+  },
   "optionsMappingsTitle": {
     "message": "Field mappings"
   },
